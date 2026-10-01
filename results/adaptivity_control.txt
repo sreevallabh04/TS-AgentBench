@@ -1,0 +1,8 @@
+=== IS THE ADAPTIVITY EARNING ITS KEEP? (CRPS, n=3284) ===
+policy                            mean    vs ref       geo    vs ref   p vs never   p vs rgc
+never_correct                   0.8621    +0.00%    0.4232    +0.00%          nan    8.9e-13
+rgc_calibrated                  0.8275    -4.01%    0.4015    -5.11%      8.9e-13        nan
+always_ensemble                 0.7506   -12.93%    0.4244    +0.31%      8.4e-23    6.1e-06
+always_recalibrate_intervals    0.8374    -2.86%    0.4048    -4.33%      5.5e-45      0.035
+always_damp_trend               1.0291   +19.37%    0.5220   +23.35%      8.5e-82   1.8e-118
+always_abstain                  1.3038   +51.24%    0.8529  +101.56%     2.3e-238   3.1e-249

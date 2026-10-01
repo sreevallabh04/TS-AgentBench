@@ -1,0 +1,12 @@
+{
+  "run": "main_20260918-233847_3fa46848",
+  "provider": "gemini",
+  "model": "gemini-3.5-flash-lite",
+  "n_subsample": 60,
+  "seed": 0,
+  "live_calls": 100,
+  "cache_hits": 140,
+  "errors": 0,
+  "prompt_tokens": 73780,
+  "completion_tokens": 5918
+}

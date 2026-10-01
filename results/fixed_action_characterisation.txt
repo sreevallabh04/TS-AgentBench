@@ -1,0 +1,18 @@
+
+=== crps_scaled (n=3284) ===
+policy                            mean       geo    median       p90  winrate  worst1%share
+never_correct                   0.8621    0.4232    0.4582    1.4913    50.0%         21.9%
+rgc_calibrated                  0.8275    0.4015    0.4460    1.4913    54.6%         20.2%
+always_ensemble                 0.7506    0.4244    0.4415    1.2487    54.8%         19.5%
+always_recalibrate_intervals    0.8374    0.4048    0.4499    1.4639    59.2%         22.5%
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3023: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3024: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+
+=== mase (n=3284) ===
+policy                            mean       geo    median       p90  winrate  worst1%share
+never_correct                   1.0090    0.4719    0.6121    1.7836    50.0%         19.2%
+rgc_calibrated                  1.0079    0.4713    0.6121    1.7836    50.0%         19.2%
+always_ensemble                 0.9670    0.4714    0.6035    1.7000    54.0%         18.3%
+always_recalibrate_intervals    1.0090    0.4719    0.6121    1.7836    50.0%         19.2%

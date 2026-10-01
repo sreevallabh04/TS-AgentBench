@@ -1,0 +1,18 @@
+\begin{tabular}{lllrrrr}
+\toprule
+Perturbation & Severity & Policy & Series & $\Delta$ vs never & 95\% CI & Win rate \\
+\midrule
+artificial anomalies & 1.00 & always correct & 84 & 0.55\% & [-3.39, 5.97] & 52.4\% \\
+artificial anomalies & 1.00 & rgc & 84 & -1.05\% & [-4.88, 2.33] & 54.2\% \\
+gaussian noise & 1.00 & always correct & 84 & -2.86\% & [-6.95, 1.02] & 54.8\% \\
+gaussian noise & 1.00 & rgc & 84 & -1.15\% & [-2.77, 0.50] & 57.1\% \\
+gradual drift & 1.00 & always correct & 84 & 3.36\%$^\dagger$ & [0.45, 6.68] & 41.1\% \\
+gradual drift & 1.00 & rgc & 84 & 0.36\% & [-1.92, 2.60] & 50.0\% \\
+regime shift & 1.00 & always correct & 84 & 6.40\% & [-0.56, 13.60] & 46.4\% \\
+regime shift & 1.00 & rgc & 84 & -1.18\% & [-4.28, 1.98] & 54.8\% \\
+seasonal change & 1.00 & always correct & 84 & -0.49\% & [-5.05, 3.34] & 44.0\% \\
+seasonal change & 1.00 & rgc & 84 & 1.39\% & [-0.05, 3.12] & 48.8\% \\
+short history & 1.00 & always correct & 84 & 2.43\% & [-3.49, 8.24] & 45.2\% \\
+short history & 1.00 & rgc & 84 & -1.57\% & [-4.36, 0.71] & 51.2\% \\
+\bottomrule
+\end{tabular}

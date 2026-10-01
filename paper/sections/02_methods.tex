@@ -1,0 +1,310 @@
+\section{Materials and Methods}
+\label{sec:methods}
+
+\subsection{Problem definition}
+
+Let $y_{1:T}$ be a univariate series with seasonal period $m$. An \emph{instance} is a
+triple $(y, t, h)$: forecast $h$ steps from origin $t$ using only $y_{1:t}$. A base
+forecaster $f$ produces a point forecast $\hat{y}_{t+1:t+h}$ and a predictive
+distribution. The agent may then apply a corrective action $a$ from a finite set
+$\mathcal{A}$, obtaining a revised forecast.
+
+The object of study is the \emph{correction policy} $\pi$, mapping evidence available at
+time $t$ to an action in $\mathcal{A}$. Writing $L(a)$ for the realised loss under
+action $a$, we evaluate policies by
+\begin{equation}
+  \mathrm{Regret}(\pi) = \mathbb{E}\big[L(\pi(\cdot)) - \min_{a \in \mathcal{A}} L(a)\big],
+\end{equation}
+which scores the \emph{choice} instead of the forecast, and is computable only because
+the benchmark stores $L(a)$ for every $a$.
+
+\subsection{TS-AgentBench}
+
+\subsubsection{Corrective action space}
+\label{sec:actionspace}
+
+Ten typed actions, each paired with the failure modes it is designed to repair:
+accept (the null action); switch model class; refit on the segment after the most recent
+structural break; robustify by replacing outliers with local medians; damp the
+extrapolated trend; re-specify the seasonal period; apply a variance-stabilising
+transform; ensemble the best-backtesting models; recalibrate prediction intervals; and
+abstain by falling back to a seasonal-naive forecast with a low-confidence flag.
+
+The space is deliberately small, closed and typed. Typing is what makes diagnosis
+consequential: the agent does not merely observe that something is wrong, it commits to
+a failure mode and applies the matched repair, and the benchmark records whether that
+was correct. Interval recalibration is retained even though it cannot change point
+accuracy, because it separates ``the forecast was wrong'' from ``the forecast was
+acceptable but over-confident''---a distinction invisible to point metrics.
+
+\subsubsection{Counterfactual outcome tensor}
+
+For every instance we execute all ten actions and score each against the realised
+target, storing point metrics (MAE, RMSE, MASE \citep{hyndman2006mase}, sMAPE, WAPE) and
+probabilistic metrics (CRPS, interval coverage, width, Winkler score). MASE is the
+primary point metric because it is scale-free and defined for series containing zeros,
+and its denominator is computed on the training history only; scaling by the full
+series would leak test information into every reported number.
+
+The primary probabilistic metric is CRPS, computed from sample paths in its energy form
+so that it is available for models with no closed-form predictive distribution. The
+choice matters for the interpretation of our results rather than only for convenience:
+CRPS is a \emph{strictly proper} scoring rule \citep{gneiting2007crps}, minimised
+uniquely by the true predictive distribution. A policy therefore cannot improve CRPS by
+inflating interval widths until coverage looks acceptable, which is the obvious
+alternative explanation for any claim that correction improves probabilistic accuracy.
+We report coverage and Winkler scores alongside it as mechanism, never as the outcome,
+and Section~\ref{sec:overconfidence} shows empirically what widening costs on this
+benchmark. From these we derive per instance:
+the oracle action and its loss; a \texttt{should\_correct} label, true when some action
+beats accepting by more than a relative margin $\delta$; the number of actions that
+would have caused harm; and the regret of any candidate policy.
+
+Two consequences follow. Evaluating a new correction policy requires no model fitting,
+so the full ablation and robustness grid is affordable on a CPU. And because the
+stochastic work happens once, replays are exactly reproducible.
+
+\paragraph{Selection bias, and why we report two oracles.}
+The unrestricted oracle takes a minimum over ten noisy outcomes on a single
+realisation. The minimum of ten draws is biased downward, so part of the apparent
+headroom is the winner's curse instead of a repair anyone could have chosen. We
+therefore also report a \emph{realizable oracle}: the best action selected on the
+\emph{validation} origins of the same series and then applied to test. It involves no
+selection on the evaluation outcome and is attainable in deployment. The difference
+between the two is the selection bias, and we report it explicitly
+(Section~\ref{sec:results}); an evaluation quoting only the unrestricted oracle
+overstates what any policy could achieve.
+
+\subsubsection{Data}
+
+\emph{Synthetic.} Fourteen generator families supply ground truth that real data cannot:
+linear and damped trends, single and multiple seasonality, stationary AR and
+near-unit-root dynamics, level shifts, gradual drift, additive and innovational
+outliers, variance shifts, Markov regime switching, short histories, missing blocks,
+and multivariate VAR with cross-series dependence. Each series records its true change
+points, outlier indices, regime labels and expected failure mode. Structural breaks are
+positioned in a late window, straddling the validation/test boundary, because whether a
+break precedes or follows the forecast origin determines whether \emph{any} correction
+could help---and conditioning on that is what H2 requires.
+
+\emph{Real.} Public datasets with documented licences and recorded checksums, drawn from
+the Monash archive (CC~BY~4.0) \citep{monash2021} and the ETT collection
+\citep{informer2021}. Provenance for every file---source URL, licence, SHA-256, access
+date---is generated by the preparation script into \texttt{datasets/LICENSES.md}. Any
+dataset whose licence we could not verify was dropped rather than assumed. Real series
+carry no ground-truth structural labels, and the analysis conditions on that flag rather
+than treating detector output as truth.
+
+\subsubsection{Splits and leakage control}
+
+Splits are strictly temporal ($\text{train} < \text{val} < \text{test}$) with
+rolling-origin evaluation. Scalers, feature statistics and MASE denominators are
+computed on training data only. The reliability estimator and every threshold are fitted
+on validation only. Oracle labels derive from test outcomes and are therefore
+evaluation-only artifacts: they live in a module that agent code cannot import, a
+constraint enforced by a test that walks the import graph and fails the build on
+violation. Further tests corrupt all post-origin observations and assert that no
+diagnostic or corrective action changes its output, which catches leakage that a
+signature inspection would miss.
+
+\subsection{Forecasting models}
+
+The pool spans naive, seasonal naive, drift, historical mean, Theta, ETS, ARIMA with a
+compact AIC-scored order search, ridge autoregression, random forest, gradient boosting,
+an LSTM, a temporal convolutional network, and a patch Transformer in the style of
+\citet{patchtst2023}. Tree models are
+fitted on first differences and integrated back, which is standard practice and avoids a
+straw-man baseline: undifferenced tree ensembles cannot extrapolate and would flatline
+on any trending series. Neural models emit all $h$ steps at once with instance
+normalisation, and share an identical training loop so that differences are attributable
+to architecture rather than to tuning.
+
+Pretrained time-series foundation models \citep{chronos2024} are supported by the
+released code but are not part of the pool reported here: running one across the full
+counterfactual tensor exceeds our CPU budget, and including it on a subset would make
+the action space differ between instances, which the decomposition analysis relies on it
+not doing. This is a stated limitation instead of a claim that the finding is
+architecture-independent.
+
+All models expose the same probabilistic interface, producing sample paths from which
+intervals and CRPS are derived. Uniform probabilistic output is what allows a naive
+baseline and a neural network to be compared on CRPS at all; without it, probabilistic
+comparison silently becomes a comparison of which models had an analytic interval
+implemented.
+
+\paragraph{Controlled base-model selection.}
+Every arm shares one base-model selection procedure: the model with the lowest
+rolling-origin backtest error on history. Arms differ \emph{only} in their correction
+policy. Allowing each arm to also choose its own model would confound the variable under
+study, since a difference in final accuracy could then arise from better model selection
+rather than better correction decisions.
+
+\subsection{Diagnostics}
+
+Eight history-only tools supply the evidence: summary features, STL decomposition with
+trend and seasonal strength, ACF/PACF, seasonal-period detection, ADF and KPSS
+stationarity tests, PELT change-point detection, robust anomaly detection on
+decomposition remainders, and distribution-shift statistics comparing a recent window
+against earlier history. Each declares a computational cost, which is what makes H4's
+cost claim measurable rather than asserted.
+
+Two implementation details were determined empirically against families whose structure
+is known by construction. Change-point detection operates on a standardised, linearly
+detrended series with an $\ell_2$ cost: the default kernel cost is unusable on
+unstandardised data, returning nothing at all on a textbook level shift when the series
+level is large, and an untreated linear trend is otherwise decomposed into a staircase
+of spurious breaks. Anomaly detection uses median and MAD rather than mean and standard
+deviation, because the latter are themselves corrupted by the outliers being sought.
+
+\subsection{Reliability-gated correction}
+
+RGC proceeds in four stages.
+
+\paragraph{1. Gate.}
+A gradient-boosted classifier, fitted on validation instances and isotonically
+calibrated, predicts $P(\text{some repair beats accepting})$. Correction is triggered
+when this exceeds a threshold chosen on validation to meet a correction budget. We gate
+on predicted \emph{gain} rather than predicted \emph{error} deliberately: a forecast can
+be doomed and unrepairable---for instance when a structural break falls inside the
+forecast horizon---and spending computation there is waste. A second head predicts
+$P(\text{large error})$ and drives abstention and the calibration analysis.
+
+Budget-first thresholding also makes the compute-matched comparison exact: the
+rate-matched random arm corrects the same number of instances, so the two arms differ
+only in \emph{which} instances they choose.
+
+\paragraph{2. Diagnose.}
+Signals are mapped to a failure mode by transparent rules, restricting candidates to
+matched repairs. The rules are deliberately not learned: a learned diagnoser would
+likely score better but would make the ablations uninterpretable, since removing a
+signal family could be silently compensated by the model rebalancing. We evaluate an LLM
+router as an alternative to these rules, treating it as a comparison instead of an
+assumption.
+
+\paragraph{3. Validate.}
+Each candidate is scored on the validation origins of the same series, and a correction
+is adopted only if it improves on accepting by more than $\delta$. This is the crux of
+the method. Those origins lie strictly in the past relative to the test origin, so a
+deployed agent could compute exactly this by backtesting candidate repairs on recent
+history. The agent never judges its own output; it measures. This is the concrete answer
+to the finding that self-correction fails when a model is left to assess itself
+\citep{huang2024selfcorrect,kamoi2024selfcorrect}.
+
+\paragraph{4. Abstain.}
+If predicted risk remains high after correction, the agent falls back to a seasonal-naive
+forecast and flags low confidence. Abstention in forecasting cannot mean returning
+nothing---downstream systems still require a number---so it takes the form of retreating
+to the most defensible simple forecast while signalling that the estimate should not be
+trusted.
+
+\subsection{Experimental arms}
+\label{sec:arms}
+
+Every policy reported anywhere in the paper is listed here, marked as pre-registered or
+added later. Later additions are recorded as deviations in the analysis plan.
+
+\paragraph{Pre-registered.}
+\begin{description}
+  \item[\texttt{never\_correct}] Accept the base forecast. The reference every other
+  arm is compared against.
+  \item[\texttt{always\_correct}] Correct every instance with the best-validated repair.
+  \item[\texttt{random\_correct}] Correct a random subset at the rate the gate fires.
+  The compute control for H6.
+  \item[\texttt{threshold\_single}] Correct when one signal, backtest error, exceeds a
+  validation-fitted threshold.
+  \item[\texttt{best\_fixed}] One repair per series, chosen on validation: the
+  realizable oracle. Its result bears directly on Section~\ref{sec:decomposition}.
+  \item[\texttt{rgc}] The reliability-gated policy as pre-registered, with a fixed 2\%
+  acceptance margin and a target correction rate of 20\%.
+  \item[\texttt{llm\_single}, \texttt{llm\_critique\_gate}] A language model that
+  chooses a repair in one pass, or first decides by self-critique whether to repair.
+\end{description}
+
+\paragraph{Added later.}
+\begin{description}
+  \item[\texttt{rgc\_calibrated}] A revised gate with a per-action gain calibrator
+  (deviation~D4). Its threshold is fitted separately for each metric, so it acts on very
+  few instances under MASE and on nearly all under CRPS, where it mostly recalibrates
+  intervals.
+  \item[\texttt{always\_ensemble}] Apply the ensemble action everywhere. Chosen
+  after the main results; Section~\ref{sec:staticcheck} shows it is the action
+  validation selects on CRPS, but not on MASE.
+  \item[\texttt{rgc\_llm\_router}] \texttt{rgc}'s gate decides whether to correct; a
+  language model chooses which repair (deviation~D8).
+\end{description}
+
+\paragraph{Reading the tables.}
+\texttt{rgc} and \texttt{rgc\_calibrated} are different policies and should not be
+compared across tables as if they were one. Their numbers also differ by aggregation:
+Table~\ref{tab:headline} reports series-level means, and the decision-quality and cost
+tables report instance-level means. The LLM tables use a smaller subsample, one
+forecast origin per series, so none of their levels match the headline table's.
+
+\subsection{LLM configuration and contamination control}
+
+LLM arms run at temperature 0 on three model families: \texttt{gemini-3.5-flash-lite},
+a small hosted proprietary model; \texttt{qwen3.8-27b}, an open-weight model of
+different lineage served by a different provider; and \texttt{gpt-oss-20b}, an
+open-weight reasoning model run at \texttt{reasoning\_effort} \texttt{= medium}
+with a completion budget sized for the reasoning trace as well as the answer. Free-tier
+quotas, which meter requests per day for one provider and tokens per day for another,
+set how much of the benchmark each family covers; coverage is reported per row rather
+than averaged over, and every non-LLM arm is re-scored inside each family's own
+subsample so that rows are comparable within a family and not across families.
+
+A fourth condition tests whether the zero-shot setting is doing the work. The LLM arms
+are zero-shot while the arithmetic estimator they are compared against is fitted on the
+validation split, so a null result would otherwise be ambiguous between a model that
+cannot read the evidence and one that was never shown what a good decision looks like.
+In that condition eight worked examples, drawn from validation only and labelled by the
+counterfactual tensor, are prepended to every prompt. Their class mix follows the
+validation base rate instead of being balanced --- a balanced prefix would itself hint
+at how often to intervene, which is the quantity under study --- and the positive
+examples are spread across distinct oracle actions so the prefix does not teach a single
+repair. The example set is fixed across instances and across metrics, so the only thing
+differing between two prompts is the instance being asked about, and the arm makes one
+decision per instance that is then scored under both metrics, exactly as the zero-shot
+arms do.
+
+Every response is cached under a hash of the provider, model, temperature, maximum
+output tokens, system prompt, user prompt and, where set, the reasoning effort. Reruns
+therefore replay identical responses and make no network calls: every LLM result in this
+paper reproduces without an API key or a provider account. Calls, cache hits, tokens and
+latency are counted, because a cost claim that is not measured is not evidence.
+
+One failure mode needed an explicit guard. A malformed or truncated reply falls back to
+accepting the forecast, and on a reasoning model truncation usually means the completion
+budget was spent on the chain of thought instead of the answer. Left unchecked that
+would bias the intervention rate downward, which is the single quantity these findings
+rest on. Provider failures and unparsed replies are therefore counted together against a
+2\% ceiling and reported separately; a run that breaches it is aborted rather than
+reported. Every arm in this paper came in at 0\% on both counts.
+
+Several real datasets are long-standing and public, so memorisation is a live risk.
+Prompts therefore omit the dataset name, series identifier, all dates and all raw
+values, presenting only scale-free diagnostic statistics: the model is asked to reason
+about a diagnosis, never to recall a series. Causal claims (H2) rest on freshly seeded
+synthetic series that cannot have been memorised.
+
+\subsection{Statistical analysis}
+
+All confirmatory tests were fixed in advance. Paired comparisons across series use the
+Wilcoxon signed-rank test with Cliff's delta as effect size; forecast-accuracy pairs use
+Diebold--Mariano \citep{diebold1995} with the Harvey--Leybourne--Newbold small-sample
+correction \citep{harvey1997}; confidence intervals are non-parametric bootstrap with
+\textbf{resampling at the series level}.
+That last choice is consequential rather than cosmetic: instances from one series share
+a model fit, a history and a regime, so resampling instances would shrink every interval
+and manufacture significance. It is also the choice we initially failed to apply; deviation~D7 in the analysis plan records that the first draft reported instance-level
+$p$-values, and that correcting this removed two claims. Equivalence claims (H4) use two
+one-sided tests, since an absent difference is not evidence of equivalence. The seven
+confirmatory hypotheses form one family under Holm--Bonferroni correction
+\citep{holm1979}; per-stratum and per-horizon breakdowns are exploratory and labelled as
+such.
+
+Where a rank test and a bootstrap interval disagree --- which happens here, because the
+loss is heavy-tailed --- we report both instead of the more favourable one. They answer
+different questions: the rank test asks whether a policy wins more often than it loses,
+the interval asks whether the sizes of those wins establish a mean improvement. A policy
+can do the first and not the second, and describing such a policy as simply ``better''
+would overstate what the data shows.

@@ -1,0 +1,10 @@
+{
+  "text": "{\"action\": \"accept\", \"confidence\": 0.9, \"reason\": \"x\"}",
+  "model": "gemini-3.5-flash-lite",
+  "prompt_tokens": 28,
+  "completion_tokens": 20,
+  "latency_s": 1.706361399999878,
+  "prompt": "Reply with JSON only: {\"action\":\"accept\",\"confidence\":0.9,\"reason\":\"x\"}",
+  "system": "You reply with JSON only.",
+  "created": 1789816240.065157
+}

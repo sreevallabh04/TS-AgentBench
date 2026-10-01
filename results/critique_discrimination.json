@@ -1,0 +1,38 @@
+{
+  "metric": "mase",
+  "model": "gemini-3.5-flash-lite",
+  "n": 578,
+  "base_rate": 0.596885813148789,
+  "auroc_critique": 0.5318467375754183,
+  "auroc_single": 0.5217018100391864,
+  "auroc_arithmetic": 0.7603470796790446,
+  "auroc_llm_confidence": 0.5290290477079057,
+  "balacc_critique": 0.5318467375754183,
+  "balacc_arithmetic_matched": 0.6720594638303166,
+  "agreement": 0.8633217993079585,
+  "jaccard": 0.8204545454545454,
+  "rows": [
+    {
+      "arm": "llm_critique_gate (critique said yes)",
+      "act_rate": 0.698961937716263,
+      "precision_vs_should_correct": 0.6188118811881188,
+      "helped": 0.2896039603960396,
+      "harmed": 0.49504950495049505
+    },
+    {
+      "arm": "llm_single (no critique)",
+      "act_rate": 0.6868512110726643,
+      "precision_vs_should_correct": 0.6120906801007556,
+      "helped": 0.2770780856423174,
+      "harmed": 0.5037783375314862
+    },
+    {
+      "arm": "random at the same 70% rate",
+      "act_rate": 0.6695501730103807,
+      "precision_vs_should_correct": 0.599483204134367,
+      "helped": NaN,
+      "harmed": NaN
+    }
+  ],
+  "verdict": "AUROC 0.532 (+0.032 vs chance); selection precision 61.9% vs 59.9% for a coin firing at the same rate and a 59.7% base rate; 82% of its intervention set is shared with the uncritiqued arm"
+}

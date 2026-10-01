@@ -1,0 +1,43 @@
+# Robustness sweep: one counterfactual tensor per (perturbation axis, severity) cell.
+# Deliberately small per cell -- the grid is 7 axes x 5 severities, so the per-cell
+# cost is multiplied 35 times.
+#
+#   python scripts/run_robustness.py --config configs/robustness.yaml
+
+extends: base.yaml
+
+name: robustness
+description: >
+  Controlled perturbation study. Synthetic only, because the causal claim requires
+  holding the underlying series fixed while varying one factor.
+
+seeds: [0]
+n_jobs: -1
+
+data:
+  include_synthetic: true
+  include_real: false
+  series_per_family: 6
+  max_series_length: 320
+
+split:
+  val_length: 36
+  test_length: 36
+  n_test_origins: 2
+  n_val_origins: 3
+  origin_stride: 8
+
+forecast:
+  horizons: [1, 12]
+  models: [naive, seasonal_naive, drift, theta, ets]
+  heavy_models: []
+
+agent:
+  arms: [never_correct, always_correct, rgc]
+
+llm:
+  max_calls: 0
+  cache_only: true
+
+eval:
+  bootstrap_resamples: 2000

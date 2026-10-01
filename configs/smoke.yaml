@@ -1,0 +1,46 @@
+# Smoke test: proves the pipeline end to end in minutes, with zero LLM calls and zero
+# network access. This is the config to run first after any refactor -- it exercises
+# every stage (generate -> split -> forecast -> tensor -> oracle -> evaluate) at a
+# scale where a failure is obvious and cheap.
+#
+#   python run_experiment.py --config configs/smoke.yaml
+
+extends: base.yaml
+
+name: smoke
+description: >
+  Minimal end-to-end pipeline check. Synthetic data only, no LLM, one seed.
+  Not a scientific result -- sample sizes are far too small for inference.
+
+seeds: [0]
+n_jobs: -1
+
+data:
+  include_synthetic: true
+  include_real: false
+  series_per_family: 3
+  max_series_length: 256
+
+split:
+  val_length: 24
+  test_length: 24
+  n_test_origins: 2
+  origin_stride: 4
+  n_val_origins: 2
+
+forecast:
+  horizons: [1, 8]
+  models: [naive, seasonal_naive, drift, theta]
+  heavy_models: []
+  heavy_model_fraction: 0.0
+
+agent:
+  # No LLM arms: the smoke test must run with no API key present.
+  arms: [never_correct, always_correct, random_correct, threshold_single, best_fixed, rgc]
+
+llm:
+  max_calls: 0
+  cache_only: true
+
+eval:
+  bootstrap_resamples: 200

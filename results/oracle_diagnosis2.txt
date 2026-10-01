@@ -1,0 +1,16 @@
+
+=== mase (n=2117) ===
+  accept                              mean=0.8108  geo=0.5074
+  first-matched action (oracle diag)  mean=0.8401  geo=0.5355  (+3.61%)
+  BEST-of-matched-candidates          mean=0.7042  geo=0.4240  (-13.14%)
+  BEST-of-ALL-actions (true oracle)   mean=0.5733  geo=0.3103  (-29.29%)
+  -> loss from hand-designed candidate list restriction: +22.84% (mean)
+  -> loss from picking 'first' vs 'best' within matched list: +19.29% (mean)
+
+=== crps_scaled (n=2117) ===
+  accept                              mean=0.6642  geo=0.4193
+  first-matched action (oracle diag)  mean=0.6946  geo=0.4417  (+4.58%)
+  BEST-of-matched-candidates          mean=0.5390  geo=0.3581  (-18.85%)
+  BEST-of-ALL-actions (true oracle)   mean=0.4487  geo=0.2898  (-32.44%)
+  -> loss from hand-designed candidate list restriction: +20.12% (mean)
+  -> loss from picking 'first' vs 'best' within matched list: +28.87% (mean)

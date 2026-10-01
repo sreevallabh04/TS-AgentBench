@@ -1,0 +1,27 @@
+[   0.5s] loaded
+[  13.3s] test labels
+[  47.9s] calibrator
+[  48.0s] evidence
+[  48.2s] decided never_correct
+[  48.4s] scored never_correct
+[  48.8s] decided always_correct
+[  48.9s] scored always_correct
+[  49.2s] decided random_correct
+[  49.4s] scored random_correct
+[  49.8s] decided best_fixed
+[  49.9s] scored best_fixed
+[  50.7s] decided rgc_calibrated
+[  50.7s] scored rgc_calibrated
+[  51.4s] decided rgc_cal_z0
+[  51.5s] scored rgc_cal_z0
+
+=== TEST: CRPS (scaled), n=3284 -- lower is better ===
+policy                  CRPS   vs never  geo-mean  act rate  winrate  wilcoxon p
+never_correct         0.8621     +0.00%    0.3870      0.0%    50.0%         nan
+rgc_calibrated        0.8583     -0.43%    0.3485      7.5%    50.7%      0.0151
+rgc_cal_z0            0.8275     -4.01%    0.3179     97.4%    54.6%    8.91e-13
+best_fixed            0.9113     +5.71%    0.3134     93.8%    52.3%     0.00311
+always_correct        0.9103     +5.59%    0.3134    100.0%    52.0%     0.00393
+random_correct        0.8967     +4.01%    0.4063     30.1%    48.3%    5.11e-08
+
+oracle 0.5834  accept 0.8621

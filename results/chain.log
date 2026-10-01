@@ -1,0 +1,196 @@
+[chain] waiting for the main experiment to finish ...
+[chain] main experiment complete.
+[chain] === ablations ===
+04:40:25 INFO    runner                 loading cached tensor 027c1e98dc90fd1d
+04:41:06 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+04:41:07 INFO    ablations              full                     MASE=1.0132 regret=0.2935 rate=20.0%
+04:41:13 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+04:41:14 INFO    ablations              no_self_critique         MASE=1.0151 regret=0.2953 rate=24.1%
+04:41:20 INFO    reliability            reliability estimator fitted on 6407 validation instances, 61 features (base rates: large_error=0.200, should_correct=0.610)
+04:41:21 INFO    ablations              no_uncertainty           MASE=0.9986 regret=0.2788 rate=21.3%
+04:41:27 INFO    reliability            reliability estimator fitted on 6407 validation instances, 61 features (base rates: large_error=0.200, should_correct=0.610)
+04:41:28 INFO    ablations              no_model_disagreement    MASE=1.0119 regret=0.2921 rate=20.2%
+04:41:33 INFO    reliability            reliability estimator fitted on 6407 validation instances, 60 features (base rates: large_error=0.200, should_correct=0.610)
+04:41:34 INFO    ablations              no_changepoint           MASE=1.0029 regret=0.2831 rate=20.5%
+04:41:40 INFO    reliability            reliability estimator fitted on 6407 validation instances, 59 features (base rates: large_error=0.200, should_correct=0.610)
+04:41:41 INFO    ablations              no_anomaly               MASE=1.0108 regret=0.2911 rate=20.1%
+04:41:47 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+04:41:48 INFO    ablations              no_adaptive_tools        MASE=1.0151 regret=0.2953 rate=24.1%
+04:41:54 INFO    reliability            reliability estimator fitted on 6407 validation instances, 58 features (base rates: large_error=0.200, should_correct=0.610)
+04:41:55 INFO    ablations              no_backtesting           MASE=1.0404 regret=0.3206 rate=27.6%
+04:42:01 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+04:42:02 INFO    ablations              no_correction_loop       MASE=1.0090 regret=0.2893 rate=0.0%
+
+=== Ablation study (removing one component at a time) ===
+             ablation   mase  delta_vs_full_pct  correction_rate  helped  harmed  compute_cost
+                 full 1.0132             0.0000           0.2001  0.5099  0.3988        0.7920
+     no_self_critique 1.0151             0.1815           0.2406  0.3684  0.3582        2.3761
+       no_uncertainty 0.9986            -1.4487           0.2135  0.5007  0.4080        0.8331
+no_model_disagreement 1.0119            -0.1374           0.2025  0.5068  0.4090        0.7957
+       no_changepoint 1.0029            -1.0228           0.2049  0.5052  0.4012        0.8158
+           no_anomaly 1.0108            -0.2426           0.2010  0.4348  0.3894        0.7811
+    no_adaptive_tools 1.0151             0.1815           0.2406  0.3684  0.3582        2.3761
+       no_backtesting 1.0404             2.6786           0.2762  0.3484  0.4300        0.8286
+   no_correction_loop 1.0090            -0.4193           0.0000     NaN     NaN        0.0000
+
+Saved to D:\paper\TS-AgentBench\results\ablations.parquet
+
+A positive delta means removing the component made things worse, i.e. the component was contributing.
+[chain] === robustness ===
+04:42:04 INFO    robustness             robustness grid: 7 axes x 5 severities on 84 base series
+04:42:04 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+04:49:01 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.697)
+04:49:01 INFO    robustness             artificial_anomalies   sev=0.00  always_correct=0.884  never_correct=0.846  rgc=0.845
+04:49:01 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+04:54:14 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.742)
+04:54:14 INFO    robustness             artificial_anomalies   sev=0.25  always_correct=0.665  never_correct=0.705  rgc=0.720
+04:54:14 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+04:58:56 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.735)
+04:58:56 INFO    robustness             artificial_anomalies   sev=0.50  always_correct=0.598  never_correct=0.599  rgc=0.590
+04:58:56 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:03:32 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.748)
+05:03:32 INFO    robustness             artificial_anomalies   sev=0.75  always_correct=0.528  never_correct=0.507  rgc=0.501
+05:03:32 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:08:01 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.739)
+05:08:01 INFO    robustness             artificial_anomalies   sev=1.00  always_correct=0.463  never_correct=0.467  rgc=0.465
+05:08:01 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:14:13 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.697)
+05:14:13 INFO    robustness             gaussian_noise         sev=0.00  always_correct=0.884  never_correct=0.846  rgc=0.845
+05:14:13 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:19:46 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.703)
+05:19:46 INFO    robustness             gaussian_noise         sev=0.25  always_correct=0.740  never_correct=0.764  rgc=0.760
+05:19:46 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:25:08 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.725)
+05:25:08 INFO    robustness             gaussian_noise         sev=0.50  always_correct=0.650  never_correct=0.655  rgc=0.653
+05:25:08 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:30:19 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.731)
+05:30:19 INFO    robustness             gaussian_noise         sev=0.75  always_correct=0.574  never_correct=0.574  rgc=0.568
+05:30:19 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:35:19 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.756)
+05:35:20 INFO    robustness             gaussian_noise         sev=1.00  always_correct=0.480  never_correct=0.492  rgc=0.485
+05:35:20 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:41:36 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.697)
+05:41:37 INFO    robustness             gradual_drift          sev=0.00  always_correct=0.884  never_correct=0.846  rgc=0.845
+05:41:37 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:47:47 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.722)
+05:47:47 INFO    robustness             gradual_drift          sev=0.25  always_correct=0.872  never_correct=0.849  rgc=0.857
+05:47:47 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:53:56 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.716)
+05:53:56 INFO    robustness             gradual_drift          sev=0.50  always_correct=0.890  never_correct=0.860  rgc=0.867
+05:53:56 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+05:59:43 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.737)
+05:59:43 INFO    robustness             gradual_drift          sev=0.75  always_correct=0.858  never_correct=0.851  rgc=0.837
+05:59:43 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+06:05:27 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.729)
+06:05:28 INFO    robustness             gradual_drift          sev=1.00  always_correct=0.856  never_correct=0.832  rgc=0.833
+06:05:28 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+06:11:40 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.697)
+06:11:40 INFO    robustness             missing_observations   sev=0.00  always_correct=0.884  never_correct=0.846  rgc=0.845
+06:11:40 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+06:17:11 WARNING robustness             estimator could not be fitted for this cell: window shape cannot be larger than input array shape
+06:17:11 WARNING robustness             cell missing_observations@0.25 produced no usable results
+06:17:11 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+06:22:27 WARNING robustness             estimator could not be fitted for this cell: window shape cannot be larger than input array shape
+06:22:27 WARNING robustness             cell missing_observations@0.50 produced no usable results
+06:22:27 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+06:27:32 WARNING robustness             estimator could not be fitted for this cell: window shape cannot be larger than input array shape
+06:27:32 WARNING robustness             cell missing_observations@0.75 produced no usable results
+06:27:32 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+06:32:42 WARNING robustness             estimator could not be fitted for this cell: window shape cannot be larger than input array shape
+06:32:42 WARNING robustness             cell missing_observations@1.00 produced no usable results
+06:32:42 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+06:38:51 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.697)
+06:38:52 INFO    robustness             regime_shift           sev=0.00  always_correct=0.884  never_correct=0.846  rgc=0.845
+06:38:52 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+06:44:38 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.733)
+06:44:38 INFO    robustness             regime_shift           sev=0.25  always_correct=0.735  never_correct=0.751  rgc=0.751
+06:44:38 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+06:50:30 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.750)
+06:50:30 INFO    robustness             regime_shift           sev=0.50  always_correct=0.667  never_correct=0.648  rgc=0.655
+06:50:30 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+06:56:04 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.729)
+06:56:04 INFO    robustness             regime_shift           sev=0.75  always_correct=0.608  never_correct=0.575  rgc=0.566
+06:56:04 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:02:07 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.735)
+07:02:08 INFO    robustness             regime_shift           sev=1.00  always_correct=0.569  never_correct=0.533  rgc=0.526
+07:02:08 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:08:25 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.697)
+07:08:25 INFO    robustness             seasonal_change        sev=0.00  always_correct=0.884  never_correct=0.846  rgc=0.845
+07:08:25 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:14:52 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.684)
+07:14:52 INFO    robustness             seasonal_change        sev=0.25  always_correct=0.996  never_correct=0.968  rgc=0.977
+07:14:52 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:21:20 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.684)
+07:21:21 INFO    robustness             seasonal_change        sev=0.50  always_correct=1.068  never_correct=1.074  rgc=1.074
+07:21:21 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:27:13 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.686)
+07:27:14 INFO    robustness             seasonal_change        sev=0.75  always_correct=1.167  never_correct=1.128  rgc=1.140
+07:27:14 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:33:07 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.678)
+07:33:07 INFO    robustness             seasonal_change        sev=1.00  always_correct=1.168  never_correct=1.172  rgc=1.189
+07:33:07 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:39:58 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.697)
+07:39:59 INFO    robustness             short_history          sev=0.00  always_correct=0.884  never_correct=0.846  rgc=0.845
+07:39:59 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:45:37 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.682)
+07:45:38 INFO    robustness             short_history          sev=0.25  always_correct=0.871  never_correct=0.837  rgc=0.829
+07:45:38 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:50:08 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.716)
+07:50:08 INFO    robustness             short_history          sev=0.50  always_correct=0.860  never_correct=0.843  rgc=0.829
+07:50:08 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:54:21 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.716)
+07:54:21 INFO    robustness             short_history          sev=0.75  always_correct=0.860  never_correct=0.843  rgc=0.829
+07:54:21 INFO    tensor                 building tensor: 792 instances x 10 actions (5 models, 8 tools)
+07:58:44 INFO    reliability            reliability estimator fitted on 472 validation instances, 64 features (base rates: large_error=0.201, should_correct=0.716)
+07:58:44 INFO    robustness             short_history          sev=1.00  always_correct=0.860  never_correct=0.843  rgc=0.829
+
+=== Robustness: mean MASE by perturbation and severity ===
+policy                         always_correct  never_correct    rgc
+perturbation         severity                                      
+artificial_anomalies 0.00              0.8842         0.8456 0.8455
+                     0.25              0.6653         0.7054 0.7197
+                     0.50              0.5981         0.5990 0.5901
+                     0.75              0.5277         0.5070 0.5008
+                     1.00              0.4628         0.4674 0.4647
+gaussian_noise       0.00              0.8842         0.8456 0.8455
+                     0.25              0.7398         0.7642 0.7601
+                     0.50              0.6495         0.6549 0.6531
+                     0.75              0.5741         0.5739 0.5683
+                     1.00              0.4795         0.4919 0.4847
+gradual_drift        0.00              0.8842         0.8456 0.8455
+                     0.25              0.8724         0.8485 0.8573
+                     0.50              0.8899         0.8596 0.8668
+                     0.75              0.8583         0.8514 0.8370
+                     1.00              0.8556         0.8316 0.8329
+missing_observations 0.00              0.8842         0.8456 0.8455
+regime_shift         0.00              0.8842         0.8456 0.8455
+                     0.25              0.7346         0.7512 0.7505
+                     0.50              0.6670         0.6482 0.6547
+                     0.75              0.6078         0.5749 0.5664
+                     1.00              0.5695         0.5326 0.5258
+seasonal_change      0.00              0.8842         0.8456 0.8455
+                     0.25              0.9963         0.9679 0.9773
+                     0.50              1.0681         1.0742 1.0745
+                     0.75              1.1665         1.1279 1.1405
+                     1.00              1.1679         1.1716 1.1893
+short_history        0.00              0.8842         0.8456 0.8455
+                     0.25              0.8710         0.8373 0.8289
+                     0.50              0.8602         0.8433 0.8295
+                     0.75              0.8602         0.8433 0.8295
+                     1.00              0.8602         0.8433 0.8295
+
+Saved to D:\paper\TS-AgentBench\results\robustness.parquet
+[chain] === paper assets ===
+07:58:53 INFO    paper_assets           generating paper assets from D:\paper\TS-AgentBench\results\runs\main_20260918-233847_3fa46848
+Generated 16 assets from main_20260918-233847_3fa46848
+  figures -> D:\paper\TS-AgentBench\paper\figures
+  tables  -> D:\paper\TS-AgentBench\paper\tables
+  summary -> D:\paper\TS-AgentBench\paper\generated\results_summary.json
+
+Pre-registered hypotheses:
+  H1: not supported  (Wilcoxon (Holm-adj.) = 0.421)
+  H3: supported      (AUROC of the risk estimator = 0.793)
+  H4: supported      (mean action evaluations per instance = 0.088)
+  H6: supported      (RGC vs. random_correct = 0.023)
+  H7: supported      (mean oracle regret = 0.085)
+[chain] STUDY COMPLETE

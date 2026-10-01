@@ -1,0 +1,28 @@
+
+=== mase: regret decomposition (synthetic, ground-truth diagnosis, n=2117) ===
+                     stage   mean  mean_pct  geometric_mean  geo_pct
+                    accept 0.8116    0.0000          0.5062   0.0000
+      first_matched_action 0.8401    3.5136          0.5355   5.7838
+best_of_matched_candidates 0.7042  -13.2258          0.4240 -16.2501
+       best_of_all_actions 0.5733  -29.3583          0.3103 -38.6945
+
+named loss terms (mean %, relative to accept):
+                                                                 loss  value_pct
+                    total achievable (unrestricted oracle vs. accept)     -29.36
+  restriction loss (matched-candidate oracle vs. unrestricted oracle)     +16.13
+first-choice loss (canonical fix vs. best-of-matched, true diagnosis)     +16.74
+
+=== crps_scaled: regret decomposition (synthetic, ground-truth diagnosis, n=2117) ===
+                     stage   mean  mean_pct  geometric_mean  geo_pct
+                    accept 0.6656    0.0000          0.4189   0.0000
+      first_matched_action 0.6946    4.3667          0.4417   5.4434
+best_of_matched_candidates 0.5390  -19.0170          0.3581 -14.5254
+       best_of_all_actions 0.4487  -32.5796          0.2898 -30.8244
+
+named loss terms (mean %, relative to accept):
+                                                                 loss  value_pct
+                    total achievable (unrestricted oracle vs. accept)     -32.58
+  restriction loss (matched-candidate oracle vs. unrestricted oracle)     +13.56
+first-choice loss (canonical fix vs. best-of-matched, true diagnosis)     +23.38
+
+Saved to D:\paper\TS-AgentBench\results\regret_decomposition.parquet and D:\paper\TS-AgentBench\results\regret_decomposition_losses.parquet

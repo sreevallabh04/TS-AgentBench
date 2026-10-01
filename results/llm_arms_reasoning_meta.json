@@ -1,0 +1,12 @@
+{
+  "run": "main_20260918-233847_3fa46848",
+  "provider": "groq",
+  "model": "openai/gpt-oss-20b",
+  "n_subsample": 60,
+  "seed": 0,
+  "live_calls": 120,
+  "cache_hits": 120,
+  "errors": 0,
+  "prompt_tokens": 90204,
+  "completion_tokens": 82844
+}

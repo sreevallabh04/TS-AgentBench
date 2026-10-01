@@ -1,0 +1,10 @@
+{
+  "text": "0",
+  "model": "gemini-3.5-flash-lite",
+  "prompt_tokens": 9,
+  "completion_tokens": 1,
+  "latency_s": 9.414401199999702,
+  "prompt": "Reply with only the integer 0.",
+  "system": null,
+  "created": 1789811241.2625043
+}

@@ -1,0 +1,48 @@
+{
+  "metric": "mase",
+  "model": "gemini-3.5-flash-lite",
+  "n": 578,
+  "n_series": 578,
+  "base_rate": 0.21972318339100347,
+  "rows": [
+    {
+      "predictor": "LLM verbalised confidence",
+      "ece": 0.32543252595155714,
+      "brier": 0.3147719723183391,
+      "aurc": 0.1592683419985005,
+      "mean_prediction": 0.5442906574394464,
+      "n": 578
+    },
+    {
+      "predictor": "Reliability estimator (calibrated)",
+      "ece": 0.05020800061602167,
+      "brier": 0.1400683043162777,
+      "aurc": 0.08828097488834104,
+      "mean_prediction": 0.1847310818514392,
+      "n": 578
+    },
+    {
+      "predictor": "Constant at base rate (0.22)",
+      "ece": 2.7755575615628914e-17,
+      "brier": 0.1714449060715269,
+      "aurc": 0.22909654399665455,
+      "mean_prediction": 0.21972318339100344,
+      "n": 578
+    }
+  ],
+  "differences": {
+    "ece": {
+      "diff": 0.22018014791059837,
+      "ci_lo": 0.18785975673138897,
+      "ci_hi": 0.25227278295024713,
+      "estimator_better": true
+    },
+    "brier": {
+      "diff": 0.1747036680020614,
+      "ci_lo": 0.14470114488172153,
+      "ci_hi": 0.20359153128526458,
+      "estimator_better": true
+    }
+  },
+  "h5_supported": true
+}

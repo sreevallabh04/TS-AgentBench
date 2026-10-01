@@ -1,0 +1,16 @@
+{"event": "tensor_built", "n_instances": 9751, "n_rows": 97510, "ts": 1790191583.6022413}
+{"event": "estimator_fitted", "gain_threshold": 0.7466849555730011, "large_error": 0.20009364757296708, "n_features": 64, "should_correct": 0.6321211175277041, "ts": 1790191603.7352273}
+{"event": "calibrator_fitted", "trusted_actions": ["abstain", "damp_trend", "ensemble", "refit_post_changepoint", "respecify_seasonality", "switch_model", "transform"], "ts": 1790191614.6744971}
+{"correction_rate": 0.0, "event": "policy_scored", "mean_metric": 0.9075544384492882, "policy": "never_correct", "seed": 0, "ts": 1790191614.9227014}
+{"correction_rate": 0.05, "event": "policy_scored", "mean_metric": 0.8762990405378424, "policy": "llm_single", "seed": 0, "ts": 1790194799.5578587}
+{"correction_rate": 1.0, "event": "policy_scored", "mean_metric": 1.008226055888764, "policy": "always_correct", "seed": 0, "ts": 1790194800.5054483}
+{"correction_rate": 0.2192448233861145, "event": "policy_scored", "mean_metric": 0.9538104037054751, "policy": "random_correct", "seed": 0, "ts": 1790194800.8552597}
+{"correction_rate": 0.28836784409257005, "event": "policy_scored", "mean_metric": 0.9456188065368618, "policy": "threshold_single", "seed": 0, "ts": 1790194801.6622276}
+{"correction_rate": 0.9052984165651644, "event": "policy_scored", "mean_metric": 1.0075793051100663, "policy": "best_fixed", "seed": 0, "ts": 1790194802.2955306}
+{"correction_rate": 0.2113276492082826, "event": "policy_scored", "mean_metric": 0.9017473716517558, "policy": "rgc", "seed": 0, "ts": 1790194802.9665008}
+{"correction_rate": 0.7402557856272838, "event": "policy_scored", "mean_metric": 0.9234655431295564, "policy": "rgc_calibrated", "seed": 0, "ts": 1790194803.8321111}
+{"correction_rate": 0.21559074299634592, "event": "policy_scored", "mean_metric": 0.9401836952549238, "policy": "random_correct", "seed": 1, "ts": 1790194804.272896}
+{"correction_rate": 0.21467722289890379, "event": "policy_scored", "mean_metric": 0.9415526008357331, "policy": "random_correct", "seed": 2, "ts": 1790194805.0143125}
+{"correction_rate": 0.2177222898903776, "event": "policy_scored", "mean_metric": 0.9330836713431322, "policy": "random_correct", "seed": 3, "ts": 1790194806.1456444}
+{"correction_rate": 0.21559074299634592, "event": "policy_scored", "mean_metric": 0.9367818665376858, "policy": "random_correct", "seed": 4, "ts": 1790194807.0141115}
+{"event": "secondary_metric_scored", "metric": "crps_scaled", "n_policies": 7, "ts": 1790226332.3649251}

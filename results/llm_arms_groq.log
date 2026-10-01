@@ -1,0 +1,61 @@
+22:11:45 INFO    llm_arms               run main_20260918-233847_3fa46848: 97510 outcome rows, 9751 instances
+22:11:45 INFO    llm_arms               provider=groq model=qwen/qwen3.8-27b keys=1 rpm=6.0
+22:12:17 INFO    llm_arms               [mase] scoring all arms on 140 of 3284 test instances (140 series)
+22:13:53 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3023: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3024: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+22:14:17 INFO    calibration            gain calibrator fitted on 12626 nested pairs; 5/9 actions show transferable signal: ['abstain', 'damp_trend', 'ensemble', 'respecify_seasonality', 'transform']
+22:14:17 INFO    llm_arms               restricted to arms: ['never_correct', 'always_ensemble', 'rgc_calibrated', 'llm_single', 'llm_critique_gate']
+22:14:17 INFO    llm_arms               [mase] never_correct        acts=   0%  calls=0  hits=0  0.0s
+22:14:17 INFO    llm_arms               [mase] always_ensemble      acts= 100%  calls=0  hits=0  0.0s
+22:14:17 INFO    llm_arms               [mase] rgc_calibrated       acts=   2%  calls=0  hits=0  0.0s
+22:14:18 INFO    llm_arms               [mase] llm_single           acts=  44%  calls=0  hits=140  0.7s
+22:15:29 INFO    llm_arms               [mase] llm_critique_gate    acts=  56%  calls=11  hits=129  70.2s
+22:16:08 INFO    llm_arms               [crps_scaled] scoring all arms on 140 of 3284 test instances (140 series)
+22:16:31 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.666)
+22:17:00 INFO    calibration            gain calibrator fitted on 12626 nested pairs; 8/9 actions show transferable signal: ['abstain', 'damp_trend', 'ensemble', 'recalibrate_intervals', 'refit_post_changepoint', 'respecify_seasonality', 'switch_model', 'transform']
+22:17:00 INFO    llm_arms               restricted to arms: ['never_correct', 'always_ensemble', 'rgc_calibrated', 'llm_single', 'llm_critique_gate']
+22:17:00 INFO    llm_arms               [crps_scaled] never_correct        acts=   0%  calls=0  hits=0  0.0s
+22:17:00 INFO    llm_arms               [crps_scaled] always_ensemble      acts= 100%  calls=0  hits=0  0.0s
+22:17:00 INFO    llm_arms               [crps_scaled] rgc_calibrated       acts=  99%  calls=0  hits=0  0.1s
+22:17:01 INFO    llm_arms               [crps_scaled] llm_single           acts=  44%  calls=0  hits=140  0.8s
+22:17:02 INFO    llm_arms               [crps_scaled] llm_critique_gate    acts=  56%  calls=0  hits=140  0.7s
+
+========================================================================================================
+MASE   n=140 instances / 140 series
+========================================================================================================
+policy               series mean   delta %           95% CI (%)  win rate   acts          p
+never_correct             0.8936    +0.00%   [  +0.00,   +0.00]    50.0%     0%        nan
+always_ensemble           0.8892    -0.50%   [  -5.17,   +4.69]    51.4%   100%       0.22
+rgc_calibrated            0.8850    -0.96%   [  -2.85,   +0.00]    50.7%     2%        nan
+llm_single                0.9400    +5.19%*  [  +0.86,  +10.19]    46.8%    44%       0.13
+llm_critique_gate         0.9458    +5.85%*  [  +1.45,  +10.84]    45.7%    56%      0.082
+  * = series-level bootstrap CI excludes zero
+
+========================================================================================================
+CRPS_SCALED   n=140 instances / 140 series
+========================================================================================================
+policy               series mean   delta %           95% CI (%)  win rate   acts          p
+never_correct             0.7513    +0.00%   [  +0.00,   +0.00]    50.0%     0%        nan
+always_ensemble           0.7168    -4.59%   [ -10.64,   +0.96]    52.1%   100%       0.18
+rgc_calibrated            0.7097    -5.54%*  [ -10.73,   -0.69]    57.1%    99%     0.0045
+llm_single                0.7941    +5.70%   [  -0.48,  +12.33]    48.6%    44%       0.32
+llm_critique_gate         0.7892    +5.04%   [  -1.22,  +11.81]    50.7%    56%       0.94
+  * = series-level bootstrap CI excludes zero
+
+========================================================================================================
+LLM COST
+========================================================================================================
+                   llm_calls  cache_hits  prompt_tokens  completion_tokens  wall_seconds
+policy                                                                                  
+always_ensemble            0           0              0                  0      0.043428
+llm_critique_gate         11         269           8279                976     70.892053
+llm_single                 0         280              0                  0      1.456907
+never_correct              0           0              0                  0      0.031003
+rgc_calibrated             0           0              0                  0      0.125102
+
+total live calls this session: 11, cache hits: 549, errors: 0, tokens: 9255
+
+Saved to results\llm_arms_groq.parquet

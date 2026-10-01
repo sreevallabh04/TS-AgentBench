@@ -1,0 +1,75 @@
+% TS-AgentBench manuscript.
+%
+% Target: Frontiers in Artificial Intelligence, section "Machine Learning and
+% Artificial Intelligence", article type Original Research (12,000 word limit,
+% IMRaD structure).
+%
+% Build:
+%   python scripts/make_paper_assets.py --run latest   # regenerate all numbers
+%   latexmk -pdf main.tex
+%
+% INTEGRITY RULE: this manuscript contains no hardcoded experimental numbers.
+% Every table is \input from tables/, every figure from figures/, and every number
+% quoted inline is a macro defined in generated/macros.tex. All three are written by
+% scripts/make_paper_assets.py from results/. If the experiment is rerun, the paper
+% re-renders; the text cannot silently disagree with the data.
+%
+% For submission, replace the article class below with Frontiers' frontiersSCNS.cls
+% (downloadable from the journal's author guidelines). The section structure here
+% already matches their required IMRaD layout.
+
+\documentclass[11pt,a4paper]{article}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{lmodern}
+\usepackage[margin=2.5cm]{geometry}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{natbib}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{microtype}
+\usepackage{url}
+
+\graphicspath{{figures/}}
+\bibliographystyle{plainnat}
+
+% Auto-generated numbers. Regenerate with scripts/make_paper_assets.py.
+\IfFileExists{generated/macros.tex}{\input{generated/macros.tex}}{%
+  \typeout{WARNING: generated/macros.tex missing. Run scripts/make_paper_assets.py.}%
+  \newcommand{\runid}{PENDING}\newcommand{\ntestinstances}{??}%
+  \newcommand{\nseries}{??}\newcommand{\acceptmase}{??}%
+  \newcommand{\oraclemase}{??}\newcommand{\realizablemase}{??}%
+  \newcommand{\shouldcorrectrate}{??}%
+}
+
+% A visible marker for anything not yet backed by a completed run. Nothing carrying
+% this marker may remain in a submitted manuscript.
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+\title{\textbf{Knowing When to Re-Forecast:\\
+Reliability-Gated Self-Correction for Time-Series Forecasting Agents}}
+
+\author{%
+  \todo{author list, affiliations and ORCIDs}\\
+  \small\todo{corresponding author email}
+}
+\date{}
+
+\begin{document}
+\maketitle
+
+\input{sections/00_abstract}
+\input{sections/01_introduction}
+\input{sections/02_methods}
+\input{sections/03_results}
+\input{sections/04_discussion}
+\input{sections/05_backmatter}
+
+\bibliography{references}
+
+\end{document}

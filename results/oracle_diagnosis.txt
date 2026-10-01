@@ -1,0 +1,15 @@
+synthetic test instances available: 7080
+
+=== mase on SYNTHETIC ONLY (n=2370), ground-truth diagnosis ===
+  never_correct        mean=0.8624 (+0.00%)  geo=0.5246 (+0.00%)  p=nan
+  oracle_diagnosis     mean=0.8879 (+2.95%)  geo=0.5517 (+5.15%)  p=0.00238
+  always_ensemble      mean=0.8535 (-1.03%)  geo=0.5196 (-0.95%)  p=1.72e-05
+  oracle_diagnosis: mean regret vs unrestricted oracle = 0.2661
+  always_ensemble: mean regret vs unrestricted oracle = 0.2317
+
+=== crps_scaled on SYNTHETIC ONLY (n=2370), ground-truth diagnosis ===
+  never_correct        mean=0.7102 (+0.00%)  geo=0.4354 (+0.00%)  p=nan
+  oracle_diagnosis     mean=0.7361 (+3.66%)  geo=0.4565 (+4.85%)  p=0.0115
+  always_ensemble      mean=0.6406 (-9.79%)  geo=0.4232 (-2.80%)  p=3.62e-17
+  oracle_diagnosis: mean regret vs unrestricted oracle = 0.2455
+  always_ensemble: mean regret vs unrestricted oracle = 0.1500

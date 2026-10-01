@@ -1,0 +1,303 @@
+\section{Discussion}
+\label{sec:discussion}
+
+\subsection{Interpretation}
+
+Our results are a caution against the premise that adaptive, per-instance correction is
+worth its complexity, and a positive result about ensembling that the field already
+half-knows but has not connected to agentic self-correction.
+
+\paragraph{The benefit lives in the predictive distribution.}
+Agentic forecasting systems are evaluated almost exclusively on point error. If the
+effect of correction is concentrated in the predictive distribution instead of its
+centre -- as our coverage results show -- a point-error benchmark is close to blind to
+it. This may explain why practitioners report that reflection helps while controlled
+point-accuracy comparisons show little: both observations can be correct if the
+mechanism is calibration repair rather than point-estimate improvement.
+
+\paragraph{Adaptivity did not earn its complexity here.}
+We built reliability-gated correction specifically to avoid the failure modes of naive
+gating: a 2\% acceptance margin that fires near-constantly, ratio-scale gains that
+explode near zero, and no accounting for per-action transfer. Each fix measurably
+improved the policy over its predecessor (Section~\ref{sec:pathologies}). Yet the fully
+corrected policy is still dominated by the simplest static baseline in the action space:
+apply the backtest-weighted ensemble unconditionally. This is a classical result in the
+forecasting literature -- combination is often the single most reliable intervention
+\citep{fforma2020} -- appearing here in an unfamiliar setting: it beats not just
+individual models but an agent explicitly built to decide, instance by instance, when
+and how to intervene. We did not find a version of adaptive gating that closes this gap,
+and we report that search as unsuccessful rather than omit it.
+
+\paragraph{The language model's problem is the decision to act, not the reflection.}
+On the primary family every LLM arm is worse than never correcting
+(Section~\ref{sec:llmarms}). We expected verbal self-critique to be the culprit and it
+was not: the critique and single-pass arms perform within a point of each other, because
+the critique barely changes what the model decides. What does the damage is a
+disposition to intervene, and it has a measurable source. The model's stated risk that
+a forecast is unreliable averages \calLlmMeanRisk{}, far above the rate at which large
+errors actually occur. It is not indifferent to reliability; it is miscalibrated in the
+direction that manufactures work.
+
+Neither deliberation nor demonstration fixed this. The reasoning model intervened most
+often of the three families, and worked examples made the critique gate worse. The
+reasoning model may choose repairs better than a coin once it has decided to act, but
+that is a direction, not an effect, at its sample size.
+
+The literature's implicit theory is that agents correct badly because their critique is
+unreliable, and that better reflection will fix it. Our evidence points elsewhere. With no
+realizable per-series headroom (Section~\ref{sec:decomposition}), a policy can only
+gain by declining to act when acting would hurt, and that is precisely what a
+miscalibrated model does not do.
+
+\paragraph{This narrows, rather than closes, the case for agentic correction.}
+Our result does not show that per-instance adaptivity is worthless in general -- only
+that decision rules of the kind current practice would produce (calibrated thresholds
+over diagnostic signals) do not beat a strong static default in this benchmark. The gap
+between ``ensemble always'' and the oracle (Figure~\ref{fig:oracle}, realizable column)
+is not zero, so some instance-specific information remains unused. What we can say is
+that any future adaptive policy should be benchmarked against \emph{this} baseline, not
+against never-correcting, because never-correcting is the easy comparison to beat.
+
+\paragraph{Why adaptivity loses: the gains do not transfer.}
+An earlier version of this paper attributed the failure of diagnose-then-repair to two
+named losses. That decomposition was built from test-selected minima and was almost
+entirely winner's curse (Section~\ref{sec:decomposition}); we withdrew it. What
+replaces it is simpler. The action that works best on a series at one set of origins
+is a poor guide to what works best at the next, so a per-series choice made on
+validation carries little information about test, and a single static action applied
+everywhere does better than choosing. With four validation origins per series, the
+estimate of which repair suits a series is too noisy to act on. That is the same
+variance argument that explains the forecast-combination puzzle, applied to repair
+selection instead of model weights.
+
+The ground-truth diagnosis result is the part that survives unchanged and needs no
+oracle. Given the true failure mode, applying its matched repair does not beat
+accepting, and on CRPS it is significantly worse. Accurate diagnosis is not what is
+missing.
+
+\subsection{The measurement pathologies deserve attention on their own}
+
+Section~\ref{sec:pathologies} reports three defects that each, independently, reversed or
+concealed our conclusions before we diagnosed them. We emphasise them because they are
+not specific to this study.
+
+Any evaluation that scores a corrective action by a relative error ratio will divide by
+near-zero baselines and destroy the signal it is trying to measure; the log ratio is the
+appropriate scale, and the difference here is between correlations of $0.006$ and $0.43$.
+Any evaluation that aggregates a heavy-tailed forecast error by the arithmetic mean is
+reporting the tail. And any evaluation that quotes an oracle defined as the minimum over
+many candidate outcomes is quoting a number inflated by selection; reporting a
+selection-free comparator alongside it costs nothing and prevents a systematic
+overstatement of what adaptive methods leave on the table.
+
+\subsection{Relation to prior work}
+
+Our agent is not architecturally novel, and we do not present it as such: its
+diagnose--select--forecast structure follows existing agentic forecasting systems
+\citep{tsscientist2025,nexus2026,castflow2026}. The difference is in the correction stage
+and, more importantly, in what we measure. Where those systems reflect unconditionally or
+by verbal judgement and report point error, we gate on a calibrated estimate and report
+both point and probabilistic accuracy. Section~\ref{sec:decomposition}'s regret
+decomposition is aimed squarely at this shared architecture: to our knowledge, no prior
+agentic forecasting system has been evaluated against a ground-truth-diagnosis version of
+its own correction logic, which is the only way to separate diagnosis error from a
+structural weakness in diagnose-then-repair itself. Our finding -- that the pattern loses value even under perfect diagnosis, for two
+separately quantified reasons -- is demonstrated for our own action space and
+diagnosis-to-repair mapping, and the exact magnitudes are specific to them, but the
+architectural pattern we test (a fixed mapping from diagnosis to a small candidate list,
+applied without further validation) is shared broadly enough across
+\citep{tsscientist2025,nexus2026,castflow2026} that the method, if not the numbers,
+transfers: any such system can be probed the same way by holding its diagnosis fixed at
+ground truth and asking whether its repair-selection logic recovers the headroom that
+diagnosis alone made available. We can run this experiment at all only because the
+counterfactual outcome tensor lets us vary the repair-selection logic while holding
+diagnosis fixed at ground truth, which no existing benchmark's data supports.
+
+\paragraph{Forecast combination, and why our headline is a rediscovery with a new
+instrument.}
+The result that a static combination is not beaten by adaptive per-instance selection
+belongs to a literature that predates agents by half a century. \citet{bates1969}
+established that combining beats choosing; \citet{clemen1989} and \citet{timmermann2006}
+surveyed why, and \citet{wang2023review} brought it up to date. The forecast combination
+puzzle \citep{stockwatson2004,smithwallis2009,claeskens2016} sharpens the point into
+something that reads almost as a prediction of our findings: simple, equally-weighted
+combinations beat optimally-weighted ones estimated from data, because the estimation
+error in the weights exceeds the benefit of weighting them well. Our adaptive policies
+are, structurally, weight estimators, they decide per instance which repair to trust, and they lose to an unweighted combination in exactly the way that literature says
+they should. \citet{hibon2005} asked our question directly in the pre-agentic setting and
+reached the same answer.
+
+We are therefore not claiming to have discovered that combination wins. What we claim is
+that the agentic forecasting literature has been constructing increasingly elaborate
+adaptive correction machinery without measuring it against this prior, and that the
+counterfactual tensor supplies something the classical literature could not: it holds
+outcomes for corrective \emph{actions}, not just for alternative forecasts, so the
+shortfall can be decomposed into named architectural causes rather than merely observed
+as an aggregate loss. The combination literature says adaptive selection tends to lose.
+It does not say \emph{which part} of a diagnose-then-repair pipeline loses it, or how
+much each part costs. Section~\ref{sec:decomposition} does.
+
+The reliability estimator descends from feature-based forecast performance prediction
+\citep{fformpp2019} and forecast stress testing \citep{mast2025}, which established that
+failure is predictable from features. We close the loop by using that prediction to
+control an agent, and we find that the prediction is accurate while the resulting
+intervention is worth making far less often than the literature assumes.
+
+Relative to existing time-series agent benchmarks
+\citep{temporalbench2026,timesagemt2026,timeseriesgym2025,aion2026}, TS-AgentBench
+evaluates a different object: the control decision, which requires counterfactual
+outcomes the others do not record. The closest work in spirit is
+\citet{agentabstain2026}, which asks whether tool-using agents know when not to act; that
+work addresses general agentic settings without counterfactual outcome data, whereas here
+the counterfactual is computed exactly.
+
+\subsection{Limitations}
+
+\paragraph{Computational scale.}
+All experiments ran on a CPU-only machine. Neural forecasters are small and trained on a
+subsample, and the foundation-model baseline is optional. We therefore make no claim
+about the best available forecasters, only about correction policies applied to a fair,
+identically-treated pool.
+
+\paragraph{The action space is finite and hand-designed.}
+Ten typed actions is what makes the counterfactual tensor computable, and it is also a
+restriction. A repair an expert would make but which is absent from the space is
+invisible to our oracle, so headroom estimates are relative to this space.
+
+\paragraph{The result does not depend on the base forecast having been adaptively
+chosen.}
+Our base forecast is chosen per instance by rolling-origin backtest over a nine-model
+pool. That is itself a strong adaptive procedure, and it was the largest threat to
+every claim above: it plausibly leaves correction little to repair, which would
+confound ``correction does not work'' with ``correction had nothing to fix''. A deployed
+single-model pipeline is a materially easier target, and correction might have paid
+there.
+
+We tested this with a second condition that fixes the base forecaster to ETS, the model
+the backtest selector picks most often and a realistic default for a deployed pipeline,
+with every other factor held identical (\texttt{configs/fixed\_base.yaml}). The two
+runs differ in exactly one scientific setting; this was verified mechanically rather
+than asserted, by confirming identical instance sets and identical history-derived
+diagnostics before any comparison was reported. Both readings of the outcome were fixed
+in the analysis plan before the run completed (deviation~D11).
+
+Table~\ref{tab:fixedbase} gives the answer. Under a fixed ETS base no policy
+significantly improves on never correcting, exactly as under the adaptive base.
+Unconditional correction remains significantly harmful (\fbAlwaysCorrectFixedPct\%,
+[\fbAlwaysCorrectFixedCIlo, \fbAlwaysCorrectFixedCIhi]\%, against
+\fbAlwaysCorrectAdaptivePct\% on the adaptive base), and the calibrated gate again fails
+to separate from zero (\fbRgcFixedPct\%, [\fbRgcFixedCIlo, \fbRgcFixedCIhi]\%). The
+hypothesis that correction failed only because the adaptive base left nothing to fix is
+rejected. The conclusions above hold for a single-model pipeline, not only for the harder
+backtest-selected case.
+
+Each column of the table is a difference from never correcting \emph{within its own
+run}. The two runs have different base forecasts and therefore different references, so
+their levels are never compared, only their differences set side by side.
+
+\begin{table}[htbp]
+\centering
+\caption{Correction under an adaptive, backtest-selected base beside the same policies
+under a fixed ETS base, on identical series, splits and seeds. Each cell is the
+series-level MASE difference from never correcting within its own run, with a 95\%
+bootstrap interval over series; $\dagger$ marks an interval excluding zero. Positive is
+worse. Levels are not shown because the two runs have different references.}
+\label{tab:fixedbase}
+\small
+\fittable{\input{tables/table_fixed_base}}
+\end{table}
+
+\paragraph{Post-hoc analyses.}
+The calibrated policy, the log-ratio gain scale, the robust aggregation and the
+fixed-base condition were all introduced after the first test evaluation. Their
+hyperparameters were selected on validation and each was evaluated on test once, but they
+are exploratory rather than confirmatory and are labelled so throughout. The deviations
+are itemised in the released analysis plan.
+
+\paragraph{Ground truth for failure modes exists only on synthetic data.}
+Real series carry no known change points or outlier labels, so failure-mode labels there
+are derived from the same detectors the agent uses. Causal claims rest on synthetic data.
+
+\paragraph{LLM scope.}
+The LLM arms cover three model families --- a small hosted proprietary model, an
+open-weight model of different lineage, and an open-weight reasoning model at medium
+effort --- at temperature 0, under free-tier API budgets that cap each family to one
+instance per series over part of the benchmark. The statistical weight sits with the
+first, at \nseries{} series; the other two cover 140 and \reasonSeries{} series and are
+powered to replicate a direction, not to establish an effect alone. Three families rule
+out a single weak model, an absence of deliberation, and the zero-shot setting as
+explanations; that is not enough to characterise language models in general, and we do not
+claim it is.
+
+What remains untested is a frontier proprietary reasoning model, multi-turn deliberation,
+and tool access during the decision. We also did not engineer the prompt against this
+benchmark: the evidence block is a fixed template, and the eight-example condition is a
+control for supervision, not an attempt at optimisation. A system built around a prompt
+tuned on these diagnostics might do better. The arm originally planned for the reasoning
+family, \texttt{gpt-oss-120b}, exhausted its daily token allowance mid-run and was
+replaced by the 20B model of the same family at the same effort setting; the substitution
+is recorded in deviation~D9 and the larger model remains untested.
+
+\paragraph{Scale.}
+\nseries{} series is modest next to the large forecast-evaluation suites
+\citep{gifteval2024,monash2021}, and the reason is the counterfactual tensor itself:
+scoring every action on every instance costs roughly an order of magnitude more compute
+than scoring one, which is the price of being able to ask decision-level questions at
+all. The series-level intervals we report already account for this; several of them
+include zero, and we say so instead of reaching for the instance-level test that would
+not have. Where an interval is wide, this benchmark cannot resolve the effect; that is not evidence the effect is absent.
+
+\subsection{Future work}
+
+The regret decomposition points at two concrete, separately testable fixes instead of a
+vague call for "better adaptivity." First, replace the fixed canonical mapping with
+validated selection among a failure mode's candidate repairs -- our calibrated policy
+already does this and is measurably less harmful than the idealised canonical-fix policy
+as a result, though it still under-performs the static ensemble. Second, and
+un-addressed by anything we built, replace the hand-designed diagnosis-to-repair
+candidate list with one learned from the counterfactual tensor itself: the benchmark
+supplies exactly the (failure signature, action, outcome) tuples needed to learn which
+repairs actually help under which conditions, rather than which repairs a domain expert
+guesses should help. The replay property means candidate mappings can be compared without
+refitting, so this is a tractable next experiment on the released artifact instead of a
+new benchmark. More generally, the tensor supplies exactly the (state, action, outcome)
+tuples that off-policy evaluation and offline reinforcement learning require for
+correction policies of any design. Given our finding that the benefit is probabilistic,
+an action space designed for distributional repair --- richer conformal schemes, adaptive
+interval widening, distributional ensembling --- is likely to have more headroom than one
+built around alternative point estimates.
+
+\section{Conclusion}
+\label{sec:conclusion}
+
+Self-correction has become a standard component of forecasting agents without evidence
+that it works, because measuring it requires knowing what would have happened under the
+corrections not taken. We built a benchmark that records exactly that.
+
+Its first lesson is about measurement. The oracle headroom that makes correction look
+promising is almost entirely selection: chosen on test outcomes the best repair per
+instance looks transformative, and chosen on earlier origins it recovers nothing. A
+correction method judged by how much of a test-selected oracle gap it closes may have
+closed none of the realizable one. Correction methods should be measured against a
+validation-selected oracle and against a static default, not against doing nothing.
+
+Its second lesson is that the realizable gain comes from choosing once. A single static
+ensemble improves probabilistic accuracy, holds on real data alone, and is what
+validation selects; choosing a repair per series does worse. That is the
+forecast-combination puzzle \citep{stockwatson2004,smithwallis2009,claeskens2016}
+reappearing at the level of repair selection, and its direction is what that literature
+predicts \citep{bates1969,timmermann2006,wang2023review}. Granting a perfect diagnosis
+does not change it: applying the matched repair still does not help.
+
+Its third lesson concerns the systems the field is building. When a language model makes
+the decision, it corrects too often, because it believes its forecasts are far less
+reliable than they are, and asking it to reflect does not change that. On the primary
+model family this makes forecasts measurably worse; two smaller families point the same
+way. None of these conclusions depends on the base forecast having been adaptively
+chosen.
+
+The same risk estimate that fails to drive correction is a well-calibrated basis for
+triage, a usable result that asks nothing of the correction machinery. We release the
+benchmark and the outcome tensor so that correction policies, including ones that
+disagree with these conclusions, can be evaluated against the same counterfactual
+outcomes.

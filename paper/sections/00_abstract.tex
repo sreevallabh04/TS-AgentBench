@@ -1,0 +1,41 @@
+\begin{abstract}
+\noindent
+Time-series forecasting agents increasingly include a self-correction stage that
+inspects a forecast, diagnoses what went wrong, and applies a repair. Whether that stage
+helps has been assumed rather than measured, because no benchmark records what would have
+happened had the agent corrected differently. We build one: every corrective action is
+executed on every instance and its outcome stored, so any correction policy can be scored
+by replay against an oracle and a ground-truth label for whether correcting was warranted.
+Across \nseries{} series we report four findings, all with series-level intervals.
+
+\textbf{The oracle headroom that motivates correction is almost entirely selection.}
+Choosing the best repair per instance on test outcomes promises a \rdMaseCeilTotalAbs\%
+MASE improvement. Making the same choice on validation origins and scoring it on held-out
+test origins recovers nothing (\rdMaseRealTotal\% MASE, \rdCrpsRealTotal\% CRPS); between
+\rdCrpsCurseShare\% and \rdMaseCurseShare\% of the apparent gap is winner's curse. Granted a
+perfect diagnosis, applying the matched repair does not help either, and on CRPS it hurts
+(\rdCrpsCanonical\%).
+
+\textbf{The one realizable gain is a single static ensemble, on probabilistic accuracy.}
+It lowers series-mean CRPS by \crpsAlwaysEnsembleVsNeverAbs\% and holds on real series alone.
+It is also what validation selects when choosing one static policy, so it is not a pick
+made on test. Choosing repairs per series loses to choosing once, the forecast-combination
+puzzle reappearing at the level of repair selection.
+
+\textbf{Handing the decision to a language model makes it worse.} On the primary model
+family, single-pass correction raises MASE by \llmMaseLlmSinglePct\% [\llmMaseLlmSingleCIlo,
+\llmMaseLlmSingleCIhi]; two further families point the same way without excluding zero at
+their smaller sizes. Self-critique changes discrimination by \discrimAurocDelta{}, and at a
+matched rate of intervention a small fitted estimator decides better (balanced accuracy
+\discrimBalaccArithmetic{} vs.\ \discrimBalaccCritique{}). Worked examples made the critique
+gate worse, not better.
+
+\textbf{None of this depends on the base forecast being adaptively chosen:} fixing the base
+to a single ETS model leaves every conclusion unchanged. The same risk estimate that fails
+to drive correction is a calibrated triage signal (AUROC \triageauroc{}). We release the
+benchmark and outcome tensor so correction policies can be compared on equal terms.
+
+\medskip
+\noindent\textbf{Keywords:} time-series forecasting, LLM agents, self-correction,
+forecast combination, winner's curse, calibration, selective prediction, benchmark
+\end{abstract}

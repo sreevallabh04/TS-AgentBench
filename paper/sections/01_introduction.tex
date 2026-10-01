@@ -1,0 +1,274 @@
+\section{Introduction}
+\label{sec:introduction}
+
+Forecasting has recently been reframed as an agentic activity. Rather than fitting a
+model and emitting a prediction, a growing family of systems orchestrates diagnostics,
+selects among candidate models, produces a forecast, and then \emph{reflects} on it,
+revising where the reflection suggests a problem
+\citep{tsscientist2025,nexus2026,castflow2026,flairr2025,timeclaw2026}. A position
+paper has argued explicitly that forecasting should move beyond model-centric
+prediction toward iterative, tool-using workflows \citep{position2026}.
+
+The reflection stage is now close to standard. Its value has not been established.
+
+This is not an oversight by any individual paper so much as a structural gap in how the
+area is evaluated. Three obstacles stand in the way of assessing self-correction.
+
+\paragraph{The correction decision has no ground truth.}
+Benchmarks record the error of the forecast an agent finally produced. They do not
+record what the error \emph{would} have been under a different corrective action, or
+under none. Without those counterfactuals, ``the agent corrected and the error was
+$x$'' cannot be turned into ``correcting was the right call''. Precision and recall of
+the decision to intervene, the regret of choosing one repair over another, and the rate
+at which corrections actively cause harm are all unmeasurable.
+
+\paragraph{Comparisons are confounded by computation.}
+A correcting agent runs more models, calls more tools, and consumes more tokens than a
+non-correcting one. When it wins, the win is jointly attributable to better decisions
+and to a larger budget. Almost no published comparison in this area separates the two,
+which means the headline claim---that self-correction helps---has an unexamined
+alternative explanation.
+
+\paragraph{Agents are asked to judge themselves.}
+Reflection in these systems is typically verbal: the model is prompted to assess its own
+output. For reasoning tasks this is precisely the mechanism shown to be unreliable.
+\citet{huang2024selfcorrect} found that intrinsic self-correction, without external
+feedback, often fails to improve and can degrade accuracy, and
+\citet{kamoi2024selfcorrect} established that the gains which do materialise come from
+outside the model---a tool, an execution result, an environment signal. Whether this
+transfers to forecasting is an open and consequential question, because forecasting is
+unusual: a cheap, principled external signal is always available in the form of
+backtesting on recent history.
+
+\paragraph{Classical forecasting already knows the answer to a neighbouring question.}
+Long before agents, the forecasting literature established that \emph{combining}
+forecasts beats trying to pick the right one. \citet{bates1969} showed that a simple
+average of two forecasts can beat both; five decades of subsequent work
+\citep{clemen1989,timmermann2006,wang2023review} and every large forecasting competition
+\citep{makridakis2000m3,m4competition2020} have confirmed it. Sharper still is the
+\emph{forecast combination puzzle}: equally-weighted combinations routinely outperform
+theoretically optimal weights estimated from data
+\citep{stockwatson2004,smithwallis2009,claeskens2016}, because estimating which forecast
+to trust adds more variance than the adaptivity recovers. \citet{hibon2005} posed
+precisely our question in the pre-agentic setting, whether to select among forecasts
+or combine them, and found selection hard to beat combination.
+
+We state this at the outset because it sets the prior against which our central result
+should be read. A reader who knows this literature should \emph{expect} a static
+combination to beat an adaptive per-instance policy, and should regard a paper that
+merely reports that direction as rediscovering a fifty-year-old result in new clothing.
+Our claim is not the direction. It is that the agentic forecasting literature has been
+building adaptive correction machinery without measuring it against that prior, that the
+shortfall is large enough to matter, and --- the part classical work could not supply,
+because it never had counterfactual outcomes for corrective \emph{actions} --- that we
+can decompose the shortfall into named, separately quantified architectural causes and
+say which one would have to be fixed first.
+
+Alongside this, a separate literature has learned to \emph{predict} forecast failure.
+Feature-based meta-learners estimate the error a model will incur on a given series
+\citep{fformpp2019}, and stress-testing methods classify the conditions under which a
+forecaster will produce unusually large errors, excessive uncertainty, or
+``hubris''---large errors held with high confidence \citep{mast2025}. These methods stop
+at diagnosis. Nobody has closed the loop by using a calibrated failure prediction to
+decide whether an agent should act.
+
+Uncertainty is likewise largely absent from agentic time-series systems. A recent survey
+of reasoning and agentic systems for time series organises the field by reasoning
+topology and objective, and contains no uncertainty category at all
+\citep{tsreasoningsurvey2026}. Calibrated confidence and selective prediction are mature
+elsewhere \citep{geifman2017selective,guo2017calibration} and well developed for time
+series in the conformal literature \citep{gibbs2021aci,cptc2025}, but they have not been
+connected to an agent's control decisions. The nearest work asks whether general-purpose
+tool-using agents know when \emph{not} to act \citep{agentabstain2026}; it does not
+address forecasting, and it has no counterfactual outcome data.
+
+\subsection{What we find}
+
+Four findings complicate the case for adaptive self-correction, and none of them is
+what we set out to show. We lead with the one that bears on how correction policies are evaluated.
+
+\paragraph{The oracle headroom that motivates correction is almost entirely
+selection.}
+Correction papers are usually judged by how much of an oracle's gap they close, where
+the oracle picks the best action per instance on the test outcome. On our benchmark
+that oracle promises a large improvement over accepting. Making the same choice on
+validation origins and scoring it on later test origins recovers nothing: between
+\rdCrpsCurseShare\% and \rdMaseCurseShare\% of the apparent gap is winner's
+curse (Section~\ref{sec:decomposition}). Ground-truth failure labels on synthetic
+data let us also grant a perfect diagnosis: applying the matched repair still does not
+help, and on CRPS it hurts. The consequence is practical. A policy that closes half of
+a test-selected gap may have closed none of the realizable one, so a correction method
+should be measured against a validation-selected oracle and against a static default,
+not against doing nothing.
+
+This is a result about our ten-action menu and our hand-designed mapping from failure
+mode to candidate repairs. It is not a test of any published system, none of which we
+re-implemented.
+
+\paragraph{Reflection does not restrain intervention.}
+The systems this paper is about let a language model make the correction decision, so
+we ran that too (Section~\ref{sec:llmarms}). On the primary model family every LLM
+arm is worse than never correcting, with intervals excluding zero on both metrics; two
+smaller families point the same way without resolving it. The reflection step fails by
+being inert: asked whether a forecast needs revising, the model says yes on
+\rateLlmCritiqueGate\% of instances, about as often as it intervenes with no
+critique at all, and adding the critique changes how well it discriminates by
+\discrimAurocDelta{}. At a matched rate of intervention, a small fitted estimator on the
+same evidence decides better. The model's own stated risk is roughly two and a half
+times the true rate of large errors, which is why it acts so often.
+
+This is the forecasting counterpart of \citeauthor{huang2024selfcorrect}'s negative
+result for reasoning, and it holds even though the evidence contained the external
+signal, recent backtest error, that \citet{kamoi2024selfcorrect} identify as what
+intrinsic self-correction lacks. The signal was there; the model did not use it.
+
+\paragraph{The benefit is probabilistic, not point-accurate.}
+The base forecasts are badly over-confident: nominal 80\% intervals achieve roughly 65\%
+empirical coverage. Corrective actions repair this miscalibration -- and therefore CRPS
+-- far more than they change the point forecast. A benchmark that scores point error
+alone is close to blind to the effect.
+
+\paragraph{A trivial static policy is not beaten by any adaptive policy we built.}
+We designed reliability-gated correction to fix the known failure modes of naive
+gating: a properly calibrated, risk-averse, per-action gain estimate, validated on
+held-out backtest origins. It works better than a naively-thresholded gate. It does not
+work better than the simplest possible alternative: applying a backtest-weighted
+ensemble to \emph{every} instance, with no diagnosis, no gate, and no adaptivity at all.
+
+All inference below is at the \emph{series} level --- one value per series, bootstrap
+resampling over series --- as our pre-registration fixes, because instances drawn from
+the same series share a generating process, a base model and most of their history, and
+treating them as independent produces intervals that are far too narrow. At that level
+the picture is sharp, and sharper than we expected:
+
+\begin{itemize}
+  \item On \textbf{point accuracy}, \emph{nothing works}. The static ensemble's
+  \maseAlwaysEnsembleVsNeverPct\% improvement has a 95\% interval of
+  [\maseAlwaysEnsembleVsNeverCIlo, \maseAlwaysEnsembleVsNeverCIhi]\%, which includes zero, as does
+  our calibrated gate's. Meanwhile correcting indiscriminately is reliably
+  \emph{harmful}: always-correct costs \maseAlwaysCorrectVsNeverPct\%
+  ([\maseAlwaysCorrectVsNeverCIlo, \maseAlwaysCorrectVsNeverCIhi]\%) and a
+  rate-matched random corrector \maseRandomCorrectVsNeverPct\%, both intervals excluding zero.
+  \item On \textbf{probabilistic accuracy}, exactly one policy of any kind reliably
+  helps, and it is the static one: the unconditional ensemble improves series-mean CRPS
+  by \crpsAlwaysEnsembleVsNeverAbs\% ([\crpsAlwaysEnsembleVsNeverAbsCIlo,
+  \crpsAlwaysEnsembleVsNeverAbsCIhi]\%). Our calibrated adaptive gate does \emph{not} clear the
+  same bar: \crpsRgcCalibratedVsNeverPct\% with an interval of [\crpsRgcCalibratedVsNeverCIlo,
+  \crpsRgcCalibratedVsNeverCIhi]\% that includes zero.
+\end{itemize}
+
+So the defensible claim is not that a static ensemble beats adaptive correction
+everywhere. It is narrower and, we think, more useful: \emph{across both metrics, the
+only reliable improvement available in this benchmark comes from a policy with no
+adaptivity in it at all}, and every adaptive policy we built, including one designed
+specifically to avoid the obvious failure modes, fails to establish an improvement
+over doing nothing.
+
+Two cautions belong with this. First, rank and magnitude disagree, as they do throughout
+heavy-tailed forecasting data: the ensemble wins on \maseAlwaysEnsembleVsNeverWinRate\% of series on
+MASE, which a signed-rank test detects easily, yet the sizes of those wins do not add up
+to a mean improvement that excludes zero. We report both statistics everywhere. Second, as set out above, the \emph{direction}
+here is what the combination literature predicts. What is new is the magnitude in the
+agentic setting, the fact that this literature has not been measuring against that prior
+at all, and the decomposition that follows.
+
+These four findings are cautionary about \emph{automated} correction. Not every use of a
+reliability signal needs to be. The same risk estimate that fails to drive good
+correction decisions is, independently, a well-calibrated ranking signal for triage
+(Section~\ref{sec:triage}): reviewing the riskiest tenth of forecasts by predicted risk
+catches roughly a third of all large-forecast errors at two-thirds precision. We report
+this as a positive, immediately deployable finding that does not depend on any of the
+adaptive-correction machinery having worked.
+
+\subsection{Contributions}
+
+\begin{enumerate}
+  \item \textbf{TS-AgentBench}, a benchmark carrying counterfactual ground truth for the
+  correction decision. Every corrective action in a typed action space is executed on
+  every instance and scored, yielding an oracle action, a \texttt{should\_correct}
+  label, and a computable regret for any policy. To our knowledge no existing
+  time-series benchmark supports decision-level evaluation of this kind. Because all
+  outcomes are precomputed, evaluating a new correction policy costs a table lookup
+  instead of a refit, which makes exhaustive ablation affordable and results exactly
+  reproducible.
+
+  \item \textbf{Reliability-gated correction (RGC)}, a policy in which the trigger is a
+  calibrated quantitative estimate instead of a verbal judgement, the repair is
+  conditioned on a diagnosed failure mode, and adoption requires demonstrated
+  improvement on held-out backtest origins. This extends offline forecast-stress
+  prediction \citep{fformpp2019,mast2025} into agent control, and grounds every step in
+  an external signal as \citet{kamoi2024selfcorrect} indicate is necessary.
+
+  \item \textbf{A compute-matched audit} of when self-correction helps, including a
+  rate-matched random-correction control that spends an identical budget, per-regime
+  analysis on data whose failure modes are known by construction, and reporting on both
+  point and probabilistic accuracy. This audit shows that no adaptive policy we built
+  beats never correcting, and that an unconditional static ensemble is the only policy
+  of any kind that does, on probabilistic accuracy.
+
+  \item \textbf{A demonstration that the oracle headroom motivating correction is
+  almost entirely selection.} The oracle conventionally used to bound what correction
+  could achieve picks the best action per instance on the test outcome. Choosing instead
+  on validation origins and scoring on held-out test origins recovers nothing, and
+  granting a perfect failure-mode diagnosis does not help either. Correction methods
+  should therefore be measured against a validation-selected oracle and a static
+  default; a policy that closes half of a test-selected gap may have closed none of the
+  realizable one.
+
+  \item \textbf{A positive, deployable finding alongside the cautionary ones}: the same
+  failure-risk estimate that does not support good automated correction decisions is a
+  well-calibrated triage signal, letting a practitioner trade a review budget for a
+  quantified fraction of caught large-error forecasts.
+
+  \item \textbf{Three measurement pathologies} that conceal the effect, each documented
+  with the evidence that exposed it. First, expressing an action's value as an error
+  \emph{ratio} divides by a baseline error that is sometimes near zero; on that scale the
+  correlation between an action's observed and its realised value is $0.006$, while on a
+  log scale the identical data gives $0.43$. Second, the arithmetic mean of MASE on this
+  benchmark describes a few dozen extreme instances instead of the benchmark: the worst
+  1\% of instances carry 19\% of the total error mass. Third, the oracle conventionally
+  used to bound achievable headroom takes a minimum over many noisy candidate outcomes
+  and is inflated by selection; the achievable, selection-free oracle is dramatically
+  smaller. An evaluation of correction that ignores these will reach the wrong
+  conclusion, as ours initially did.
+\end{enumerate}
+
+\subsection{What we do not claim}
+
+The agentic forecasting area is crowded, and we are explicit about what is already
+established. We do not claim the first agentic forecasting framework
+\citep{tsscientist2025,nexus2026,castflow2026,tsagent2025,lastmile2026}; the first
+time-series agent benchmark
+\citep{temporalbench2026,timesagemt2026,timeseriesgym2025,aion2026}, nor the first
+large-scale forecast evaluation suite \citep{gifteval2024,monash2021}; the first argument
+that forecasting should be agentic \citep{position2026}; the first prediction of
+forecast failure from features \citep{fformpp2019,mast2025}; the first evaluation of
+agentic abstention \citep{agentabstain2026}; or, most importantly for reading our
+headline result, the first demonstration that combining forecasts beats selecting
+among them, which is fifty years old \citep{bates1969,clemen1989,wang2023review}. Our
+contribution is narrower and, we
+believe, currently missing: making the correction decision measurable, and testing
+whether it survives a controlled comparison.
+
+\subsection{Hypotheses}
+
+The analysis was pre-registered before any experiment was run
+(\texttt{docs/ANALYSIS\_PLAN.md} in the released code). We state the hypotheses here and
+report every verdict in Section~\ref{sec:results}, including those not supported.
+
+\begin{description}
+  \item[H1] Reliability-gated correction improves accuracy relative to a non-correcting
+  agent.
+  \item[H2] Gains concentrate under distribution shift, anomalies and regime change.
+  \item[H3] Forecast failure is predictable in advance from history-only diagnostics.
+  \item[H4] Selective tool use matches exhaustive tool use at lower computational cost.
+  \item[H5] Reliability-gated confidence is better calibrated than an agent's
+  self-reported confidence.
+  \item[H6] Any gain is not explained by additional computation alone.
+  \item[H7] A quantitative gate decides better than verbal self-critique.
+\end{description}
+
+H6 and H7 are the load-bearing ones. Without H6, H1 is not falsifiable against the
+``more compute'' explanation; we therefore fixed in advance that if H6 fails, H1 would
+be reported as \emph{not attributable to the correction policy}, whatever H1 itself
+showed.

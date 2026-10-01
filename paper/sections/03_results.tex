@@ -1,0 +1,604 @@
+\section{Results}
+\label{sec:results}
+
+All numbers are generated from run \texttt{\runid} by
+\texttt{scripts/make\_paper\_assets.py} and \texttt{scripts/headline\_results.py}; none
+is transcribed by hand. Verdicts on every pre-registered hypothesis, including those not
+supported, appear in Table~\ref{tab:hypotheses}. Post-hoc analyses are labelled as such
+and are itemised in the deviations section of the released analysis plan.
+
+\subsection{Benchmark composition}
+
+Table~\ref{tab:datasets} summarises what was evaluated: \nseries{} series and
+\ntestinstances{} test instances across synthetic families with ground-truth structure
+and real datasets without it.
+
+\begin{table}[htbp]
+\centering
+\caption{Benchmark composition. Ground-truth structural labels exist only for synthetic
+families; for real datasets the failure modes are derived rather than known.}
+\label{tab:datasets}
+\small
+\fittable{\input{tables/table_dataset_summary}}
+\end{table}
+
+\subsection{A dissociation between point and probabilistic accuracy}
+\label{sec:headline}
+
+The central result is that the answer to ``does self-correction help?'' depends entirely
+on which accuracy is being measured, and that the two answers point in opposite
+directions on identical instances with identical actions.
+
+\paragraph{The unit of inference.}
+Every effect below is a paired difference between per-series means, with a percentile
+interval from a bootstrap that resamples \emph{series}. The pre-registered plan fixes
+this unit, and it matters: our \ntestinstances{} test instances come from only
+\nseries{} series, and instances within a series share a generating process, a base
+model, a scaling denominator and most of their history. An instance-level interval
+treats them as independent and comes out several times too narrow. We report the
+signed-rank $p$-value as well, but the claims rest on the intervals. Deviation~D7 in the
+analysis plan records that our own first draft got this wrong, and what changed when we
+fixed it.
+
+\begin{table}[htbp]
+\centering
+\caption{Correction policies under point and probabilistic accuracy. Both panels use the
+same instances, the same action space and the same policies; only the scored quantity
+differs. Negative percentages favour the policy over never correcting. Effects are
+series-level with 95\% bootstrap intervals over series; $\dagger$ marks an interval
+excluding zero. The win rate is the fraction of series on which the policy beats never
+correcting, reported alongside the mean because the two disagree here.}
+\label{tab:headline}
+\small
+\fittable{\input{tables/table_headline}}
+\end{table}
+
+\paragraph{Point accuracy: nothing reliably helps, and indiscriminate correction
+reliably hurts.}
+No policy establishes an improvement over accepting the initial forecast. The
+unconditional static ensemble comes closest at \maseAlwaysEnsembleVsNeverPct\%, but its
+interval [\maseAlwaysEnsembleVsNeverCIlo, \maseAlwaysEnsembleVsNeverCIhi]\% includes
+zero; our calibrated adaptive policy is statistically indistinguishable from doing
+nothing, which it achieves largely by almost never acting. The clear effects on this
+metric are in the other direction: correcting every instance costs
+\maseAlwaysCorrectVsNeverPct\% ([\maseAlwaysCorrectVsNeverCIlo,
+\maseAlwaysCorrectVsNeverCIhi]\%) and a rate-matched random corrector
+\maseRandomCorrectVsNeverPct\% ([\maseRandomCorrectVsNeverCIlo,
+\maseRandomCorrectVsNeverCIhi]\%), both intervals excluding zero. Correction is not a
+free option on point accuracy: applied without a reliable trigger it is a measurable
+liability.
+
+\paragraph{Probabilistic accuracy: one policy works, and it is the static one.}
+The unconditional ensemble reduces series-mean CRPS by
+\crpsAlwaysEnsembleVsNeverAbs\% ([\crpsAlwaysEnsembleVsNeverAbsCIlo,
+\crpsAlwaysEnsembleVsNeverAbsCIhi]\%), winning on
+\crpsAlwaysEnsembleVsNeverWinRate\% of series. It is the only arm on either metric whose
+interval excludes zero in the helpful direction. Our calibrated adaptive gate moves in
+the same direction (\crpsRgcCalibratedVsNeverPct\%) and wins on
+\crpsRgcCalibratedVsNeverWinRate\% of series, but its interval
+[\crpsRgcCalibratedVsNeverCIlo, \crpsRgcCalibratedVsNeverCIhi]\% includes zero, so we do
+not claim it improves on never correcting. CRPS is a strictly proper scoring rule, so
+this improvement cannot be manufactured by widening intervals: a point we verify
+directly in Section~\ref{sec:overconfidence}, where the arm that \emph{does} widen
+intervals achieves better coverage and substantially worse CRPS.
+
+\paragraph{Was the ensemble picked on test?}
+\label{sec:staticcheck}
+The static ensemble was not among the pre-registered arms, so declaring it the winner
+after seeing ten static actions on test would be the selection problem again. We
+checked by choosing the single static action with the lowest mean error on
+validation origins, blind to test, and applying it everywhere. On CRPS, validation
+selects the ensemble, and its test effect is the one reported above. The CRPS result is
+therefore realizable, not a post-hoc pick. On MASE, validation selects
+\texttt{\spMaseValChoice}, which is significantly \emph{harmful} on test
+(\spMaseValChoiceEffPct\%, [\spMaseValChoiceEffCIlo, \spMaseValChoiceEffCIhi]\%).
+So on point accuracy even a validated choice of static action does not help, which is
+consistent with the ensemble's own MASE interval including zero.
+
+Because 420 of the 578 series come from our own generators, we also repeated the
+comparison on each source alone. The CRPS improvement holds on the \spCrpsEnsRealN{} real
+series by themselves (\spCrpsEnsRealPct\%, [\spCrpsEnsRealCIlo, \spCrpsEnsRealCIhi]\%)
+and on the synthetic ones (\spCrpsEnsSynPct\%, [\spCrpsEnsSynCIlo,
+\spCrpsEnsSynCIhi]\%), so it does not depend on generator design.
+
+\paragraph{Rank and magnitude disagree, and we report both.}
+For two comparisons the signed-rank test is emphatic while the bootstrap interval is
+not: the ensemble beats never-correcting on \maseAlwaysEnsembleVsNeverWinRate\% of series
+on MASE, and the calibrated gate on \crpsRgcCalibratedVsNeverWinRate\% of series on CRPS,
+yet neither interval excludes zero. Both facts are real. A policy can win more often than
+it loses while the sizes of its wins and losses fail to establish a mean improvement, which is the expected situation for a heavy-tailed loss, and the reason
+Table~\ref{tab:headline} carries the win rate next to the effect rather than either
+alone.
+
+\subsection{Why: the base forecasts are over-confident}
+\label{sec:overconfidence}
+
+The mechanism is directly measurable. Nominal 80\% prediction intervals from the base
+forecasts achieve substantially less than 80\% empirical coverage, and nominal 95\%
+intervals likewise. Corrective actions repair the predictive distribution while leaving
+its centre almost unchanged, which is exactly the pattern that a point-error metric
+cannot detect and a probabilistic one can.
+
+\paragraph{The probabilistic gain is not coverage inflation.}
+An obvious objection to any claim of the form ``correction improves probabilistic
+accuracy'' is that intervals can always be widened until coverage looks good, so the
+result might measure nothing but timidity. Two things rule that out here. First, our
+headline probabilistic metric is CRPS, a strictly proper scoring rule: widening a
+predictive distribution beyond its correct dispersion increases CRPS. Coverage is
+reported as mechanism, never as the outcome. Second, the benchmark contains a direct
+empirical test of exactly this, because one of the ten actions does nothing else. The
+\texttt{abstain} action falls back to a seasonal-naive forecast with widened intervals;
+it attains the \emph{best} empirical coverage of any action in the space
+(Table~\ref{tab:coverage}), essentially hitting the nominal 80\% level, with intervals
+roughly $2.4\times$ wider than the base forecast's. Its CRPS is $51\%$ \emph{worse} than
+accepting, and its MASE $43\%$ worse. An action that games coverage is therefore
+severely penalised by the metric we actually report, which is what a proper scoring rule
+is for. The ensemble improves coverage and CRPS together; abstention improves coverage
+and destroys CRPS. Only the first is evidence of a better predictive distribution.
+
+\begin{table}[htbp]
+\centering
+\caption{Interval coverage and CRPS by action, on the instances where each action
+applies. CRPS is paired against accepting on those same instances. The base forecast is
+badly over-confident; the ensemble repairs coverage and CRPS together. \texttt{abstain}
+is the control for the objection that probabilistic gains can be manufactured by
+widening intervals: it achieves the best coverage in the action space with intervals
+roughly $2.4\times$ wider, and is penalised heavily on CRPS for it.}
+\label{tab:coverage}
+\small
+\fittable{\input{tables/table_coverage}}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{fig_calibration}
+\caption{Calibration of the failure-risk estimator, with expected calibration error.}
+\label{fig:calibration}
+\end{figure}
+
+\subsection{What the corrections did}
+
+Two rows carry the argument. \texttt{always\_correct} intervenes on every
+instance and helps on \helpedAlwaysCorrect\% of them while harming
+\harmedAlwaysCorrect\%, which is how a policy can be busy and still lose: the
+harmful interventions are individually larger than the helpful ones. Our calibrated
+gate intervenes on \rateRgc\% of instances and inverts that ratio, helping on
+\helpedRgc\% of the instances it touches against \harmedRgc\% harmed, and its
+oracle regret (\regretRgc{}) is the lowest of any acting policy.
+
+That is the shape of the result throughout this paper. Restraint is what the gate
+buys, not accuracy: it selects better than chance among the instances it acts on, and
+still does not beat declining to act at all, because the actions available to it give
+back more on the instances it gets wrong than they win on the instances it gets right.
+Section~\ref{sec:decomposition} takes that apart.
+
+
+Aggregate accuracy conceals the mechanism. Table~\ref{tab:decision} reports
+decision-level quality, which only a counterfactual benchmark can produce: how often each
+policy intervened, how often intervention helped rather than harmed, and the regret of
+its choices against the oracle.
+
+\begin{table}[htbp]
+\centering
+\caption{Decision quality. ``Helped'' and ``harmed'' are computed among corrected
+instances only, so a policy can intervene frequently and still lose to never correcting.}
+\label{tab:decision}
+\small
+\fittable{\input{tables/table_decision_quality}}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{fig_correction_outcomes}
+\caption{Outcome of every intervention, by policy. What matters is not how often a policy
+acts but how often acting was warranted.}
+\label{fig:outcomes}
+\end{figure}
+
+\subsection{Three measurement pathologies}
+\label{sec:pathologies}
+
+Each of the following concealed the effect above, and we report them because any
+evaluation of correction will encounter them.
+
+\paragraph{Ratio gains explode.}
+Expressing an action's value as $(\text{accept} - \text{action}) / \text{accept}$ divides
+by an error that is sometimes near zero. On that scale the correlation between an
+action's observed gain on one window and its realised gain on the next is $0.006$, with
+residual standard deviations above $1000$: no usable signal. On the log scale
+$\log(\text{accept}/\text{action})$, the identical data gives a correlation of $0.43$
+with residual standard deviations below $0.7$, and a clear per-action structure. The
+conclusion changes from ``correction is unpredictable'' to ``correction is predictable
+for some actions and not others''.
+
+\paragraph{The arithmetic mean describes the tail.}
+MASE on this benchmark has a median near $0.6$ and a maximum near $190$; the worst 1\% of
+instances carry roughly a fifth of the total error mass. Comparisons on the mean are
+therefore comparisons of a few dozen instances. We report mean, offset geometric mean and
+median throughout. Absolute geometric means depend on the additive offset used to handle
+exact zeros; relative comparisons do not, and only relative comparisons are interpreted.
+
+\paragraph{Oracle headroom is mostly selection bias.}
+The unrestricted oracle, the minimum over all actions on each instance, advertises
+large available improvement. But it selects the best of roughly ten noisy outcomes on a
+single realisation, so much of that margin is the winner's curse. A \emph{realizable}
+oracle, choosing the best action on validation origins and applying it to test, captures
+almost none of it (Figure~\ref{fig:oracle}). Quoting the unrestricted figure would
+overstate what any policy, including a perfect one, could attain.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.8\textwidth]{fig_oracle_gap}
+\caption{Accept, competing policies, and the two oracles. The unrestricted oracle is an
+unattainable upper bound inflated by selection; the realizable oracle is attainable.}
+\label{fig:oracle}
+\end{figure}
+
+\subsection{How much headroom is there? Most of the oracle gap is selection}
+\label{sec:decomposition}
+
+A common pattern in agentic forecasting systems is to diagnose a failure mode and apply
+a repair matched to it \citep{tsscientist2025,nexus2026,castflow2026}. On synthetic
+instances the generator's failure mode is known, so we can grant that pattern a perfect
+diagnosis and ask what it is worth. Section~\ref{sec:headline} showed that the policies
+we built do not beat a static ensemble; here we ask how much there was to gain at all.
+
+\paragraph{Scope.}
+This tests our ten-action space and our hand-designed mapping from failure mode to
+candidate repairs (Section~\ref{sec:actionspace}). It is not a test of any published
+system, none of which we re-implemented, and a richer action space or a learned mapping
+could give a different answer.
+
+\paragraph{Four stages, and two ways to select.}
+We compare accepting the forecast; a \emph{canonical fix} that applies the first
+repair our mapping assigns to the true failure mode; the best of that mode's two or
+three matched candidates; and the best of all ten actions. The last two involve a
+choice, and the choice can be made in two ways. Selecting on the \emph{test} outcomes
+gives a ceiling that no policy could reach. Selecting on \emph{validation} origins and
+scoring on held-out test origins, with the rule the realizable oracle uses (per series
+and horizon, the action with the lowest mean validation error), gives what a policy
+with perfect per-series knowledge could actually achieve. Table~\ref{tab:regretdecomp}
+reports both, with series-level bootstrap intervals throughout.
+
+\begin{table}[htbp]
+\centering
+\caption{The decomposition selected two ways, on \rdMaseNseries{} synthetic series with
+ground-truth diagnosis. Rows 1--3 are percentage changes relative to accepting; rows 4--5
+are differences between rows, in percentage points. Intervals are 95\% series-level
+bootstrap; $\dagger$ marks one excluding zero. The canonical fix involves no
+selection, so its two columns are identical. The left column minimises over test
+outcomes, and the gap between the columns is the winner's curse.}
+\label{tab:regretdecomp}
+\small
+\fittable{\input{tables/table_regret_decomposition_realizable}}
+\end{table}
+
+\paragraph{Selected on test, the headroom looks large; selected on validation, it is
+gone.}
+Minimising over test outcomes, the best action per instance improves MASE by
+\rdMaseCeilTotalAbs\% over accepting, and the gap decomposes into two sizeable losses
+(\rdMaseCeilFirst{} and \rdMaseCeilRestrict{} percentage points). That is the
+decomposition an earlier version of this paper reported. It is an instance of the
+selection-inflated oracle described in Section~\ref{sec:pathologies}: the expected
+minimum of ten noisy outcomes is lower than the minimum of three, and the minimum of
+three is lower than a single draw, even when no action carries any real signal.
+
+Made on validation, the same choices recover nothing. The best action per series
+changes MASE by \rdMaseRealTotal\% ([\rdMaseRealTotalCIlo, \rdMaseRealTotalCIhi]\%),
+worse than accepting, and CRPS by \rdCrpsRealTotal\% ([\rdCrpsRealTotalCIlo,
+\rdCrpsRealTotalCIhi]\%). Neither named loss is distinguishable from zero. Between
+\rdCrpsCurseShare\% and \rdMaseCurseShare\% of the apparent headroom was selection.
+Per-series repair choices do not transfer from earlier origins to later ones on this
+benchmark, so there is no realizable headroom for a per-series policy to lose.
+
+A pre-registered arm reaches the same answer independently. \texttt{best\_fixed},
+fixed in the analysis plan before any result was seen, is exactly this realizable oracle
+applied to all \nseries{} series, synthetic and real. It is significantly worse than
+never correcting on MASE (\maseBestFixedVsNeverPct\%, [\maseBestFixedVsNeverCIlo,
+\maseBestFixedVsNeverCIhi]\%). So the result does not rest on an analysis written after a
+reviewer's objection; it was already in the pre-registered results, unremarked.
+
+\paragraph{What survives.}
+Three things, none of which depends on a test-selected quantity. First, under a perfect
+diagnosis the canonical repair does not help: \rdMaseCanonical\% on MASE
+([\rdMaseCanonicalCIlo, \rdMaseCanonicalCIhi]\%) and \rdCrpsCanonical\% on CRPS
+([\rdCrpsCanonicalCIlo, \rdCrpsCanonicalCIhi]\%), the latter a significant
+degradation. Second, choosing the best repair per series on validation does not help
+either. Third, a single static ensemble applied everywhere does help on CRPS
+(Section~\ref{sec:headline}), and it is the action validation selects when asked for
+one static policy (Section~\ref{sec:staticcheck}). Choosing per series loses to
+choosing once. That is the forecast-combination puzzle
+\citep{stockwatson2004,smithwallis2009,claeskens2016} reappearing at the level of repair
+selection: estimating which repair suits each series adds more variance than the
+specificity recovers.
+
+This also says something about how correction policies are usually evaluated. Oracle
+regret against a test-selected oracle is the standard yardstick, and on this benchmark
+almost all of what it measures is selection. A policy that closes half of such a gap
+may have closed none of the realizable one.
+
+% The LLM-arm results render only when scripts/llm_arms.py has actually produced
+% them. Without that file the manuscript states plainly that the arms were not run,
+% instead of rendering prose about results that do not exist. See ANALYSIS_PLAN.md D8.
+\IfFileExists{tables/table_llm_arms.tex}{\input{sections/03b_llm_arms}}{%
+\subsection{Letting a language model decide}
+\label{sec:llmarms}
+
+\emph{This section is intentionally empty in the present build.} The arms that delegate
+the correction decision to a language model --- a single-pass chooser, a verbal
+self-critique gate, and a gate-plus-LLM-router --- are implemented, tested end to end,
+and run with one command against the same counterfactual tensor as every policy above.
+They are not reported here because the provider's free tier allows 500 requests per day
+for the configured model and 20 for the alternative, and a run covering enough series to
+support a series-level interval needs several times that. Deviation~D8 in the analysis
+plan records the constraint and what was cached.
+
+We flag this prominently instead of burying it: this manuscript argues about
+architectures that delegate correction to a language model, and until these arms are
+reported that argument rests on the decomposition in
+Section~\ref{sec:decomposition} and on the non-LLM policies, not on direct evidence about
+language-model decision-making. A reader should discount the paper's claims about verbal
+self-critique accordingly.
+}
+
+\subsection{Selective prediction: a positive, deployable finding}
+\label{sec:triage}
+
+The results above are cautionary about automated correction. The failure-risk estimator
+that drives the gate is nonetheless independently useful for a different and arguably
+more common industrial purpose: prioritising forecasts for human review. Because the
+estimator is fit and evaluated exactly as in Section~\ref{sec:decomposition} (validation
+only, never test), the numbers below describe a deployable capability instead of a
+ceiling.
+
+\begin{table}[htbp]
+\centering
+\caption{Selective-prediction value of the failure-risk estimator (AUROC
+$=\triageauroc$, base rate of large errors $=\triagebaserate\%$). Reviewing the
+riskiest 10\% of forecasts catches roughly a third of all large errors at two-thirds
+precision -- a $\triageliftPOneZero\times$ enrichment over reviewing at random.}
+\label{tab:triage}
+\small
+\fittable{\input{tables/table_triage}}
+\end{table}
+
+This reframes what the benchmark's reliability estimation contributes: not necessarily
+\emph{automated} self-correction, which our results treat with substantial scepticism,
+but \emph{calibrated triage} -- flagging which forecasts warrant scrutiny, at a
+quantified precision/recall operating point a practitioner can choose to match a review
+budget. This is a positive, actionable, and immediately deployable use of the same
+signal that the correction-policy analysis shows is hard to act on automatically.
+
+\subsection{Failure is predictable in advance}
+
+H3 asked whether a forecast's failure can be anticipated before the outcome is known,
+using only history-side diagnostics. It can. The gradient-boosted risk estimator,
+fitted on validation and evaluated on held-out test instances, reaches AUROC
+\triageauroc{} against a large-error base rate of \triagebaserate\%. It is
+\textbf{\verdictHThree}.
+
+This is worth separating carefully from everything else here, because it is the one
+component that works as designed and it is easy to over-read. Predicting that a
+forecast will be bad is not the same as knowing what to do about it. The same
+estimator drives the correction gate, and the gate does not beat never correcting
+(Table~\ref{tab:headline}); it is the action that fails, not the prediction. What the
+signal does support is triage, where a human decides what to do next, and that is the
+subject of Section~\ref{sec:triage}.
+
+Figure~\ref{fig:importance} ranks the signals by permutation importance: the drop
+in AUROC when a single signal is shuffled. The ablations in
+Section~\ref{sec:ablations} give the complementary view, measuring what each signal is
+worth to the end-to-end policy rather than to the classifier, and the two do not
+agree: a signal can carry information about failure and still not improve a decision
+made on top of it.
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.62\textwidth]{fig_feature_importance}
+\caption{Signals driving the correction gate, by permutation importance (drop in AUROC
+when a signal is shuffled).}
+\label{fig:importance}
+\end{figure}
+
+\subsection{Cost}
+
+Accuracy is only half of a deployment decision. Table~\ref{tab:cost} prices each
+policy in action evaluations per instance, the unit that dominates: every evaluation
+is a re-forecast.
+
+The ordering is unkind to adaptivity. \texttt{always\_correct} evaluates
+\deltaAlwaysCorrect{} actions per instance to finish worse than evaluating none. Our
+gate spends \deltaRgc{} --- an order of magnitude less, because it declines to act on
+four instances in five --- and this is what H4 tests and what it
+\textbf{\verdictHFour} on: selective evaluation matches exhaustive evaluation at a
+fraction of the compute, mostly because it rarely acts.
+
+The comparison that matters for practice is against the static ensemble, which costs
+one evaluation per instance, takes no decision at all, and is the only policy whose
+interval excludes zero in the helpful direction on CRPS. Any adaptive correction stage
+has to be argued for against that, and on this benchmark the argument cannot be made
+on accuracy at any price. The LLM arms are priced separately in
+Section~\ref{sec:llmarms}, because their cost is measured in provider calls rather
+than in local re-forecasts and the two do not add.
+
+
+\begin{table}[htbp]
+\centering
+\caption{Accuracy against computational cost, in action evaluations and LLM calls per
+instance.}
+\label{tab:cost}
+\small
+\fittable{\input{tables/table_cost}}
+\end{table}
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.62\textwidth]{fig_cost_accuracy}
+\caption{Accuracy versus computation. The region of interest is the lower left: equal or
+better accuracy for less computation.}
+\label{fig:cost}
+\end{figure}
+
+\subsection{Where correction helps}
+
+If correction pays anywhere, it should pay where the forecast is under stress.
+Figure~\ref{fig:strata} breaks the change down by generator family, which on
+synthetic data means a breakdown across known structural conditions rather than across
+heterogeneous datasets whose differences are uncontrolled.
+
+The families where correction earns most are the ones where the base forecast is
+misspecified in a way a single action repairs; contaminated series, where removing
+outliers and refitting recovers the fit, and series whose assumed seasonal period is
+wrong. The families where it earns least are those where the base model was already
+adequate, and there the intervention is a coin flip with a cost. This is a statement
+about the \emph{conditional} value of acting, and it is the motivation for gating at
+all; Section~\ref{sec:robustness} tests it directly by perturbing the series along
+controlled axes instead of reading it off the families that happen to exist.
+
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=0.94\textwidth]{fig_stratum_gains}
+\caption{Change by generator family. Because synthetic families carry ground-truth
+structure, this is a comparison across known conditions rather than across heterogeneous
+datasets.}
+\label{fig:strata}
+\end{figure}
+
+\section{Ablation Studies}
+\label{sec:ablations}
+
+Each ablation removes one component and replays against the identical counterfactual
+tensor, so every configuration sees the same forecasts and the same action outcomes and
+only the decision policy varies. Where a signal family is ablated it is removed from the
+estimator's features as well as from the diagnoser, so the gate cannot reintroduce it.
+
+\begin{table}[htbp]
+\centering
+\caption{Component ablations, replayed against the identical counterfactual tensor.
+A positive $\Delta$ means removing the component made results worse. Intervals are
+95\% series-level bootstrap against the full system; $\dagger$ marks one excluding
+zero. Only one does.}
+\label{tab:ablations}
+\small
+\fittable{\input{tables/table_ablations}}
+\end{table}
+
+One component is load-bearing. Removing backtesting costs \ablNoBacktestingSeries\%
+([\ablNoBacktestingSeriesCIlo, \ablNoBacktestingSeriesCIhi]\%) and pushes the
+intervention rate from \ablFullRate\% to \ablNoBacktestingRate\%: without an
+estimate of how the base forecast has actually been doing, the policy loses its grip on
+when to leave well alone. That is the same signal the language model was handed and did
+not use (Section~\ref{sec:llmarms}).
+
+No other component's removal is distinguishable from zero at the series level. The
+uncertainty signals, changepoint proximity, anomaly signals and cross-model disagreement
+each have intervals that include zero, and so does the self-critique step. An earlier
+draft read the instance-level point estimates in this table as evidence that several
+components were mildly harmful; the intervals do not support that, and we no longer say
+it. What they do support is weaker: only the crudest signal in the diagnostic apparatus,
+recent backtest error, does identifiable work.
+
+The last row is the one to read. Removing the correction loop entirely, so the policy
+never acts, changes MASE by \ablNoCorrectionLoopSeries\%
+([\ablNoCorrectionLoopSeriesCIlo, \ablNoCorrectionLoopSeriesCIhi]\%). The full
+system and no system are indistinguishable, which is the headline result of
+Section~\ref{sec:headline} restated as an ablation.
+
+Self-critique and adaptive tool use are the same configuration in this framework, since
+the critique decides whether to call a further tool; the two rows are identical for that
+reason. Removing it raises compute from \ablFullCompute{} to
+\ablNoAdaptiveToolsCompute{} action evaluations per instance while changing accuracy by
+\ablNoAdaptiveToolsSeries\% ([\ablNoAdaptiveToolsSeriesCIlo,
+\ablNoAdaptiveToolsSeriesCIhi]\%).
+
+\section{Robustness Analysis}
+\label{sec:robustness}
+
+Each perturbation axis is applied at increasing severity to the \emph{same} base series,
+with forecast targets left untouched, so degradation is attributable to the perturbation
+rather than to differences between datasets.
+
+\begin{figure}[htbp]
+\centering
+\includegraphics[width=\textwidth]{fig_robustness}
+\caption{Degradation under controlled perturbation.}
+\label{fig:robustness}
+\end{figure}
+
+The sweep is the sharpest test of the case for correction, because it manufactures the
+conditions correction exists to handle. Across \robComparisons{} comparisons ---
+seven perturbation axes, four severities, two acting policies, each against never
+correcting on the same series --- \textbf{\robImprovements{} show a significant
+improvement} and \robDegradations{} show a significant degradation. A correction stage
+that cannot beat inaction under injected anomalies, regime shifts, drift, seasonal
+change, added noise, missingness or truncated history has not merely failed to win on
+average. It has failed where its own rationale places it.
+
+\begin{table}[htbp]
+\centering
+\caption{Correction against never correcting under controlled perturbation, at the
+strongest severity of each axis. Series-level means with bootstrap intervals over
+series; negative favours the policy and $\dagger$ marks an interval excluding zero.
+The full sweep over all four severities is in the released results.}
+\label{tab:robustness}
+\small
+\fittable{\input{tables/table_robustness}}
+\end{table}
+
+\paragraph{H2 holds, in a restricted form worth stating precisely.}
+H2 predicted that gains \emph{concentrate} under shift, anomalies and regime change.
+Concentration is not level, so the pre-registered test is a difference-in-differences:
+a policy's advantage over never correcting in a perturbed stratum, minus its advantage
+on the same series unperturbed. Both differences are formed per series before
+subtraction, so the pairing survives on each side and the bootstrap resamples one unit.
+
+The difference-in-differences design is not fastidiousness. Perturbation is applied to
+the series history as well as to the forecast window, so it moves the MASE denominator
+and rescales every error on that series: mean accept-MASE falls from
+\robSeverityMild{} to \robSeveritySevere{} severity purely as a consequence. Levels are
+therefore not comparable across severities, and only a within-severity contrast against
+the same series means anything.
+
+Across \robHTwoTested{} strata, \robHTwoRaw{} concentrate before correction, against
+roughly two expected by chance at this many tests, and \robHTwoSurviving{} survive the
+Holm correction the analysis plan fixes. H2 is therefore \textbf{\verdictHTwo{} in a
+restricted form}: concentration appears for \texttt{\robHTwoPolicies}, under
+\robHTwoAxes{}, at the mildest severity applied (\robHTwoSeverity{}), and nowhere else
+in the sweep. Two strata out of \robHTwoTested{} is a narrow verdict and we report it as
+one.
+
+\paragraph{Neither surviving stratum belongs to the adaptive gate.}
+Both are unconditional correction. The conditional value of correcting is real and it
+is detectable, and the machinery built to detect it did not detect it. The policy
+designed to fire exactly where correction pays did not fire there, while the policy that
+fires everywhere captured it. That is a more specific indictment of diagnosis-driven
+gating than the aggregate result, and it points the same way as
+Section~\ref{sec:decomposition}.
+
+\paragraph{Why the gains vanish as severity rises: we cannot say.}
+A natural reading of concentration at mild severity only is that severe damage is
+beyond what the menu can repair. We cannot test that here. The obvious measure,
+how much an oracle could still recover at each severity, uses an oracle selected on
+test outcomes, and Section~\ref{sec:decomposition} shows that such an oracle is almost
+entirely winner's curse on this benchmark. The perturbation sweep has no validation
+origins, so a realizable version cannot be computed. We therefore leave the severity
+pattern unexplained, and note only that it is also what one would expect if the two
+surviving strata were partly chance: two of forty-eight, both at one severity level.
+
+\section{Error Analysis}
+\label{sec:erroranalysis}
+
+We characterise the calibrated policy's mistakes on CRPS, where it acts on 97\% of
+instances. Of these, 47\% improved and 38\% harmed the forecast. Harm is concentrated:
+the worst 1\% of corrections account for roughly half of all damage summed across
+corrected instances, and a single \texttt{refit\_post\_changepoint} correction on one
+instance cost as much as many small wins combined. This heavy tail is why the calibrated gate's design includes an optional risk-averse lower bound on predicted gain. Validation selected that bound's width as zero (deviation~D4), so the deployed gate thresholds the point estimate; the tail is real, but on this benchmark widening the bound did not help on held-out origins.
+
+Two further findings temper any adaptive-policy claim. First, among corrected instances,
+the calibrated gain estimate used to \emph{select} the action does not predict which
+individual corrections help ($r=-0.02$, $p=0.22$): the calibration is informative about
+which actions are worth trying in aggregate, not about which specific instances will
+benefit. Second, \texttt{ensemble} accounts for the large majority of the calibrated
+policy's corrections and of its benefit, which is consistent with Section~\ref{sec:headline}, where the unconditional ensemble is the only policy that improves CRPS reliably: the adaptive layer spends most of its budget approximating the static policy without matching it.

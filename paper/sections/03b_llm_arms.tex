@@ -1,0 +1,378 @@
+\subsection{Letting a language model decide}
+\label{sec:llmarms}
+
+Everything so far concerns policies whose decisions are made by arithmetic. But the
+systems this paper is about delegate the decision to a language model, and a critique of
+that architecture that never runs it would not be worth much. This section runs it.
+
+Three arms share the counterfactual tensor with every policy above, so the outcome of
+each action is identical and the only thing that varies is who chooses.
+\texttt{llm\_single} sees the diagnostic evidence once and picks an action, the
+Self-Refine pattern. \texttt{llm\_critique\_gate} sees the same evidence but first judges
+\emph{whether} the forecast needs revising at all: the reflection step whose value is
+this paper's question, and the mechanism \citet{huang2024selfcorrect} and
+\citet{kamoi2024selfcorrect} found unreliable in reasoning tasks.
+\texttt{rgc\_llm\_router} hands the model only the \emph{which}, keeping our quantitative
+gate for the \emph{whether}, which separates the value of gating from the value of
+routing. All three receive exactly the evidence our own gate receives: the comparison is
+about how the decision is made, not about who saw more.
+
+\paragraph{How this section relates to the previous one.}
+Section~\ref{sec:decomposition} found no realizable per-series headroom: choosing
+repairs on validation does not beat accepting. That sets the bar for a language model
+in the decision loop. It cannot win by choosing repairs cleverly, because there is
+little to win; it can only avoid losing by declining to act. The question this section
+asks is therefore whether a model restrains itself, and the answer is that it does not.
+
+\paragraph{Three model families, because one would not settle it.}
+A single model failing to beat never-correcting invites the obvious reply that we picked
+a weak one. The arms therefore run on unrelated families: \texttt{gemini-3.5-flash-lite},
+a small hosted proprietary model, on one instance from each of the \nseries{} series;
+\texttt{qwen3.8-27b}, an open-weight model of different lineage served by a different
+provider, on 140 series; and \texttt{gpt-oss-20b}, an open-weight \emph{reasoning} model
+run at medium effort, on \reasonSeries{} series. Free-tier quotas set the coverage and they meter differently ---
+one provider caps requests per day, the other tokens per day --- so the series count is
+given per row in Table~\ref{tab:llmarms}, and the smaller family covers the two arms that
+carry the argument rather than all three. Every non-LLM arm is re-scored within its own
+family's subsample, so rows are comparable down a block but not across blocks.
+Temperature is 0 throughout and every response is cached, so the experiment replays
+without an API key.
+
+The first two are not reasoning models and receive no prompt engineering: the evidence
+block is a fixed template and each decision is a single zero-shot turn. The third
+deliberates explicitly, and a fourth condition described below shows a model worked
+examples drawn from the validation split. What the families establish together is
+therefore not a claim about language models in general, but that the result is not an
+artefact of one model's idiosyncrasies, of an absence of deliberation, or of the
+zero-shot setting, which are the three objections a single-family null cannot answer.
+
+\begin{table}[htbp]
+\centering
+\caption{LLM correction arms against the same counterfactual outcomes, for two model
+families. Non-LLM arms are re-scored within each family's own subsample, so rows are
+comparable within a family block but not across blocks; the covered series count is given
+per row. Effects are series-level differences from never correcting with 95\% bootstrap
+intervals; $\dagger$ marks an interval excluding zero. Negative favours the policy.
+``LLM calls'' is the live provider call count, since a correction stage that does not
+help is still not free.}
+\label{tab:llmarms}
+\small
+\fittable{\input{tables/table_llm_arms}}
+\end{table}
+
+\paragraph{On the primary family, every LLM arm is worse than doing nothing.}
+On the primary family all
+three arms degrade both metrics with intervals that exclude zero: a single pass costs
+\llmMaseLlmSinglePct\% MASE ([\llmMaseLlmSingleCIlo, \llmMaseLlmSingleCIhi]\%) and
+\llmCrpsLlmSinglePct\% CRPS ([\llmCrpsLlmSingleCIlo, \llmCrpsLlmSingleCIhi]\%); the
+self-critique gate costs \llmMaseLlmCritiqueGatePct\% and
+\llmCrpsLlmCritiqueGatePct\%, and even the router, which acts on only a seventh of
+instances because our quantitative gate holds it back, costs
+\llmMaseRgcLlmRouterPct\% and \llmCrpsRgcLlmRouterPct\%. Each wins on fewer than half of
+series. On the same instances the static ensemble improves CRPS by
+\llmCrpsAlwaysEnsembleAbs\% ([\llmCrpsAlwaysEnsembleAbsCIlo,
+\llmCrpsAlwaysEnsembleAbsCIhi]\%), so the subsample is not too small to resolve a real
+effect; it resolves one, in the opposite direction from the arms that reason about each
+instance.
+
+\paragraph{A discrepancy between two designs.}
+In Table~\ref{tab:llmarms} the static ensemble's MASE advantage clears significance,
+whereas in Table~\ref{tab:headline} the same policy's MASE interval includes zero. The
+tables are computed on different data: the headline analysis uses every test origin
+(\ntestinstances{} instances), while these arms use one randomly chosen origin per series,
+because that is what the API budget allowed. Both are series-level and both are correct
+for what they cover; the subsample simply draws fewer of the extreme origins that widen
+the full interval. \textbf{The headline analysis is the primary one}, and the claim we
+stand behind is the more conservative of the two: that no policy reliably improves
+point accuracy. We flag the difference because quoting the subsample's narrower interval
+as though it settled the point would be exactly the kind of selection this paper
+criticises elsewhere.
+
+The decision-level view explains the aggregate. When the language model chooses to
+correct, it makes the forecast \emph{worse} on roughly half the instances it touches and
+better on under a third: it harms about $1.8\times$ as often as it helps. The router
+is the worst offender at a $64\%$ harm rate, which is initially surprising until one
+notices what it means: even after a calibrated gate has correctly identified an instance
+worth correcting, delegating the choice of \emph{which} repair to a language model
+destroys the opportunity. That is Section~\ref{sec:decomposition}'s restriction-and-first-choice
+loss appearing again, with a language model in the role of the fixed canonical mapping.
+A better-informed guess is still a guess; it is not a measurement.
+
+\paragraph{The reflection step carries almost no information.}
+We expected the comparison between \texttt{llm\_single} and \texttt{llm\_critique\_gate}
+to be the sharpest in this section, because they differ in exactly one thing: whether the
+model is asked to judge the need for correction before choosing. It is not sharp at all.
+Asked plainly whether the forecast needs revising, the model answers yes on
+\rateLlmCritiqueGate\% of instances, almost exactly the rate at which the single-pass arm
+chooses to act anyway, and the two arms land within a percentage point of each other on
+both metrics.
+
+Matching rates would be weak evidence on its own; two arms can intervene equally often
+while selecting very different instances, one of them well. So we test discrimination
+directly, against the benchmark's ground-truth \texttt{should\_correct} label
+(Table~\ref{tab:discrimination}). The critique's yes/no separates warranted from
+unwarranted correction at AUROC \discrimAurocCritique{}, against a chance value of 0.500.
+Its selection precision is \discrimPrecisionCritique\%, where the base rate is
+\discrimBaseRate\% and a coin firing at the same rate achieves \discrimPrecisionRandom\%.
+And \discrimJaccard\% of the instances it elects to correct are the same instances the
+uncritiqued arm corrects.
+
+The decisive comparison is with the arm that does no critique at all, which discriminates
+at AUROC \discrimAurocSingle{}. \textbf{Adding an explicit reflection step moves
+discrimination by \discrimAurocDelta{}; from near-chance to near-chance.} The critique
+is not merely a weak gate; it is very nearly a re-description of what the model would have
+done without being asked. Both families show the same pattern
+(Table~\ref{tab:discrimination}), including one where the critique step \emph{raises} the
+intervention rate instead of leaving it flat, and still adds essentially nothing to
+discrimination.
+
+\paragraph{The same judgement, made arithmetically.}
+The natural question is whether this decision is simply hard. It is not. Our reliability
+estimator --- gradient boosting over the same diagnostic features the model was shown in
+prose, fitted on validation only --- scores \discrimAurocArithmetic{} against the
+\emph{same} label on the \emph{same} instances (Table~\ref{tab:discrimination}). That is
+\discrimArithmeticAdvantage{} AUROC above the self-critique. We deliberately do not
+express that as a multiple of the critique's distance from chance: dividing by a
+near-zero baseline is the first of the measurement pathologies this paper documents
+(Section~\ref{sec:pathologies}). We also
+report the contrast \emph{matched}, because the triage figure quoted in
+Section~\ref{sec:triage} targets a different label, and setting the two against each
+other directly would not be legitimate.
+
+\paragraph{What that contrast does and does not license.}
+A binary yes/no scored as an AUROC is balanced accuracy, and nothing more. The
+estimator emits a continuous score, so scoring the two the same way credits it for
+ranking that a yes/no cannot express, and some of the apparent gap is an artefact of
+the output type rather than of the judgement behind it. The contrast is therefore reported at matched footing in two ways, both in
+Table~\ref{tab:discrimination}.
+
+The first gives the language model the same kind of credit. Its verbalised confidence
+is continuous, so it can be scored as a ranking against the same label: it reaches
+AUROC \discrimAurocLlmConfidence{} against the estimator's \discrimAurocArithmetic{},
+a gap of \discrimContinuousGap{}. The second removes the ranking question entirely
+by forcing both to the same operating point --- the estimator thresholded to flag
+exactly the fraction of instances the critique gate flags --- and compares balanced
+accuracy: \discrimBalaccArithmetic{} against \discrimBalaccCritique{}, a gap of
+\discrimMatchedGap{}.
+
+The two ask different questions and both are worth keeping. (a) asks whether the
+model's stated risk can \emph{rank} instances at all, independent of where a threshold
+would be placed. (b) asks how much better the decision is at the rate the model
+actually fires, which is the quantity a deployed gate delivers. It is worth noting that
+(a) is marginally \emph{larger} than the unmatched comparison it replaces
+(\discrimContinuousGap{} against \discrimArithmeticAdvantage{}), so matching was not a
+route to a smaller number; only (b), which removes the ranking question entirely,
+narrows the gap.
+
+At a matched operating point the gap
+is \discrimMatchedGap{}, not the \discrimArithmeticAdvantage{} a naive reading of the
+first two columns would give. The artefact was real and it was worth roughly a third
+of the apparent difference. What survives it is still the finding: on the same
+instances, against the same label, at the same rate of intervention, a gradient-boosted
+model over a few dozen scalar diagnostics decides substantially better than a language
+model reasoning over the same evidence in words.
+
+What the contrast does not license is a claim that language models cannot do this. The
+estimator is fitted on the validation split and the model is not, and that asymmetry is
+addressed directly below. Nor does it license a claim about relative ceilings: it
+compares one fitted estimator against one prompted model, at one budget, and a
+different prompt or a different model could land elsewhere. It licenses exactly one
+thing, which is the thing the deployment question turns on: that the cheap
+arithmetic option available to any practitioner today is the better of the two.
+
+
+\begin{table}[htbp]
+\centering
+\caption{Does verbal self-critique carry information about whether to correct? All
+columns are computed on the same instances against the same ground-truth
+\texttt{should\_correct} label. ``AUROC (critique)'' scores a binary yes/no and is
+therefore balanced accuracy; ``AUROC (arithmetic)'' scores a continuous estimator and
+is credited for ranking, so the two are compared at matched footing in the text rather
+than by subtracting these columns. $\Delta$ AUROC is the within-model quantity the
+claim rests on: the same model, the same instances, deciding with and without being
+asked to reflect. ``Overlap'' is the Jaccard overlap of the two intervention sets.}
+\label{tab:discrimination}
+\small
+\fittable{\input{tables/table_discrimination}}
+\end{table}
+
+\paragraph{Why it intervenes so often: it thinks its forecasts are far worse than
+they are.}
+The arms are asked, in the same breath as the decision, for a number between 0 and 1
+expressing how reliable they judge the current forecast to be. That is a claim about
+exactly the event the reliability estimator predicts, so the two can be scored against
+each other on identical instances and an identical label. This is pre-registered
+hypothesis H5, and it is \textbf{supported}: the estimator's calibration error is
+\calEceDiff{} lower ([\calEceDiffCIlo, \calEceDiffCIhi], bootstrapped over series),
+and the same ordering holds on the Brier score.
+
+The size and direction of the miscalibration are what matter here. Large errors occur
+on \calBaseRate\% (on the \calN-instance subsample the LLM arms run on) of these instances; the model's stated risk averages
+\calLlmMeanRisk{}. It believes its forecasts fail roughly two and a half times as often
+as they do. That is not a detail about calibration, it is the mechanism behind the
+headline: a model that thinks most of its forecasts are unreliable will conclude that
+most of them need fixing, which is precisely the disposition the intervention rates
+show. The reflection step is not failing to detect a problem it should have seen: it is reporting a problem that is mostly not there.
+
+Table~\ref{tab:calibration} also contains the reason we do not rest this on calibration
+error alone. A constant predictor that simply emits the base rate attains an ECE of
+essentially zero while ranking nothing at all, and its Brier score (\calConstBrier{})
+is nonetheless better than the language model's (\calLlmBrier{}). By the proper
+scoring rule, the agent's stated confidence is worse than a constant. It is not
+worthless as a \emph{ranking}: its AURC of \calLlmAurc{} beats the constant's
+\calConstAurc{}, so there is some signal in which forecasts it doubts most. But that
+signal is buried under a bias large enough to make the resulting decisions wrong, and a
+gate reads the level, not the ranking.
+
+That a language model's stated confidence is poorly calibrated is not itself news
+\citep{kadavath2022know,lin2022verbalized,xiong2024confidence}, and we do not present it
+as such. Two things here are worth separating from that literature. The direction is
+inverted: the usual finding is overconfidence, a model claiming more certainty than its
+accuracy warrants, whereas this model is systematically \emph{pessimistic} about the
+artefact it is judging. And the consequence is operational rather than presentational.
+In the settings where verbalised confidence is normally studied it is a number shown to
+a reader, who may discount it; here it is wired into a control loop, where a bias of
+this size does not mislead anyone so much as it manufactures roughly one unnecessary
+repair for every instance that needed one.
+
+\begin{table}[htbp]
+\centering
+\caption{H5: the agent's stated confidence against a calibrated estimate of the same
+event. Both predict the probability of a large error, on the same \calN{} instances
+and against the same label; lower is better in every column. The constant predictor is
+included deliberately: it attains a perfect calibration error while ranking nothing,
+which is why ECE is never read here on its own.}
+\label{tab:calibration}
+\small
+\fittable{\input{tables/table_confidence_calibration}}
+\end{table}
+
+\paragraph{Deliberation, and demonstration, against criteria fixed in advance.}
+Two reasonable objections are still open at this point. The models run so far answer in a
+single zero-shot turn, so the failure could be an absence of deliberation instead of a
+property of the mechanism. And the arithmetic comparator is fitted on the validation
+split while the language model is shown nothing, so the contrast above could be measuring
+supervision rather than capability. Both were tested on one shared denominator ---
+\reasonSeries{} series, one origin each --- with the falsification criteria written down
+before the runs completed (deviation~D9). The deliberation arm is \texttt{gpt-oss-20b} at
+\texttt{reasoning\_effort} \texttt{= medium}, with a completion budget large enough for
+the reasoning trace and the answer; it recorded no provider failures and no unparsed
+replies. The demonstration arm prepends eight worked examples drawn from validation and
+labelled by the counterfactual tensor --- the same supervision, out of the same data, that
+the estimator receives --- and runs against a matched zero-shot control on the identical
+series, so the comparison is within-model on the same instances.
+
+Neither closes the gap. The reasoning model degrades MASE by \reasonMaseSinglePct\%
+([\reasonMaseSingleCIlo, \reasonMaseSingleCIhi]\%) in one pass and
+\reasonMaseCritiquePct\% ([\reasonMaseCritiqueCIlo, \reasonMaseCritiqueCIhi]\%) with
+self-critique, intervening on \reasonRateSingle\% and \reasonRateCritique\% of instances
+respectively: the highest rates of any family. Eight worked examples move the
+intervention rate from \zeroshotRateSingle\% to \fewshotRateSingle\% and the effect on
+MASE from \zeroshotMaseSinglePct\% ([\zeroshotMaseSingleCIlo,
+\zeroshotMaseSingleCIhi]\%, excluding zero) to \fewshotMaseSinglePct\%
+([\fewshotMaseSingleCIlo, \fewshotMaseSingleCIhi]\%, no longer excluding zero). That is a small improvement this denominator cannot resolve, not a repair: the
+two intervals overlap over almost their whole length, and the demonstration condition does
+not bring the arm to parity with never correcting. The critique gate is a different story, and it runs against us. With the same eight
+examples its degradation grew rather than shrank: from \zeroshotMaseCritiquePct\% to
+\fewshotMaseCritiquePct\% on MASE ([\fewshotMaseCritiqueCIlo, \fewshotMaseCritiqueCIhi]\%)
+and from \zeroshotCrpsCritiquePct\% to \fewshotCrpsCritiquePct\% on CRPS
+([\fewshotCrpsCritiqueCIlo, \fewshotCrpsCritiqueCIhi]\%, excluding zero). The MASE
+interval is wide enough that a few series drive it, but the direction is unambiguous:
+showing the gate worked examples made it more harmful, not less. We do not have an
+explanation we can test. What it does rule out is the reading that the critique gate
+failed only for want of supervision.
+
+The obvious question is why the demonstration condition stopped at eight examples and
+\fewshotSeries{} series. The answer is budget rather than design: the prefix multiplies
+prompt tokens roughly sixfold, and free-tier quotas bind on tokens for one provider and
+on requests for the other. A larger demonstration budget, or in-context examples
+selected per instance rather than fixed, is untested here and is the version of this
+arm we would run first with more compute. What we can say is that the cheapest form of
+the intervention, the one a practitioner would reach for, does not restrain the
+model, and that is a narrower claim than the arm was built to make.
+
+The pre-registered falsifiers did not fire. The primary one asked whether self-critique
+would raise this model's discrimination by more than $+0.05$ AUROC over the same model
+deciding without reflection. It moved by \reasonAurocDelta{}: \emph{down}, from
+\reasonAurocSingle{} to \reasonAurocCritique{}, on \reasonDiscrimN{} instances where the
+arithmetic estimator scored \reasonAurocArithmetic{} against the identical label. This is
+the strongest form of the within-model result in the paper. Asking the one model that
+actually deliberates to deliberate about its own judgement did not improve that judgement;
+it made it slightly worse.
+
+\paragraph{Given the decision to correct, is the chosen repair any good?}
+The arms conflate two decisions: whether to correct, and which repair to apply. The
+tensor separates them, because it holds the outcome of every action on every instance.
+On the instances where an arm intervened we compare the repair it chose against a
+uniform draw from the same menu on the same instance, computed exactly by averaging the
+menu's outcomes. That comparison involves no selection, so it is the one the claims rest
+on (Table~\ref{tab:actionchoice}).
+
+On the primary family the choice cannot be told apart from the coin. Single-pass
+selection scores \actionChoiceSinglePct\% relative to a uniform draw
+([\actionChoiceSingleCIlo, \actionChoiceSingleCIhi]\%) and the critique arm
+\actionChoiceCritiquePct\% ([\actionChoiceCritiqueCIlo, \actionChoiceCritiqueCIhi]\%).
+Having decided to act, the model's choice of repair carries no measurable advantage over
+choosing at random among the options it was shown.
+
+The table also shows the best action in each menu. That row is a maximum over test
+outcomes, and Section~\ref{sec:decomposition} shows such maxima are almost entirely
+winner's curse on this benchmark, so it is context rather than a target, and no claim
+uses it. The router arm's \actionChoiceRouterPct\% rests on \actionChoiceRouterN{}
+instances with an interval of [\actionChoiceRouterCIlo, \actionChoiceRouterCIhi]\%; it
+is underpowered and excluded from claims.
+
+\begin{table}[htbp]
+\centering
+\caption{Given the decision to correct, how good is the chosen repair? MASE on the
+instances where each arm intervened. The uniform draw averages the menu's outcomes
+exactly and is the comparison claims rest on. The best-in-menu row is a maximum over
+test outcomes, inflated by selection (Section~\ref{sec:decomposition}), and is shown
+for context only. Intervals are series-level bootstrap; the router arm is underpowered.}
+\label{tab:actionchoice}
+\small
+\fittable{\input{tables/table_action_choice}}
+\end{table}
+
+\paragraph{The reasoning model may choose better, but it still acts too often.}
+The reasoning family points the other way on this test. Its single-pass choice scores
+\reasonChoiceSinglePct\% against a uniform draw ([\reasonChoiceSingleCIlo,
+\reasonChoiceSingleCIhi]\%) and its critique arm \reasonChoiceCritiquePct\%
+([\reasonChoiceCritiqueCIlo, \reasonChoiceCritiqueCIhi]\%). Both intervals just
+include zero at \reasonSeries{} series, so this is a direction, not an effect. If it
+holds, deliberation helps with which repair to apply and not with whether to apply one;
+and because this arm still intervenes on \reasonRateSingle\% of instances, its net
+effect on accuracy stays negative either way.
+
+\paragraph{The pre-registered test of H7.}
+H7 asked whether a quantitative gate decides better than verbal self-critique, scored by
+oracle regret. It is the one hypothesis in the plan that could not be evaluated until
+these arms ran. It is \textbf{\verdictHSeven}: the calibrated gate's mean regret is
+\statHSeven{} lower than the LLM critique gate's. The comparison is worth stating
+carefully, because the gate achieves this largely by declining to act; its regret is
+almost identical to never correcting. The finding is therefore not that quantitative
+gating is good at choosing corrections. It is that it is good at \emph{not} choosing
+them, and that verbal self-critique is not.
+
+\paragraph{What this does not establish.}
+Three families, a reasoning model at real effort, and a demonstration condition close the
+cheapest objections but not every one. We cannot rule out that a frontier reasoning model,
+multi-turn deliberation with tool access during the decision, or a prompt engineered
+against this benchmark would do better; nor that a larger member of the same reasoning
+family --- the one originally planned, lost to a daily token cap --- would separate from
+the 20B model we ran. The reasoning and demonstration conditions cover \reasonSeries{}
+series, which is enough to replicate a direction and not enough to establish an effect on
+its own. Nor did we test sensitivity to prompt wording, and the pessimism result in particular
+may depend on how the confidence question is phrased. What the result does establish
+is narrower: the mechanism
+\emph{as commonly deployed}, on the evidence commonly available to it, is not merely
+unhelpful but reliably harmful; its harm resolves at the primary family's sample size, while the two smaller families show the same direction without resolving it. Self-reflection, the intervention most often proposed as the fix, did not improve the model's judgement in any family we ran.
+
+\paragraph{The cost side.}
+These are also the expensive arms. The self-critique gate alone made
+\llmCallsCritiqueGate{} live provider calls, and the three arms together consumed
+\llmCallsTotal{} calls and \llmPromptTokensThousands{}k prompt tokens on the primary
+family. The static ensemble that outperforms all of them makes zero
+provider calls and takes no per-instance decision whatsoever. Any argument for an
+LLM-in-the-loop correction stage has to be made against that baseline, and on this
+benchmark it cannot be made on accuracy at any price.

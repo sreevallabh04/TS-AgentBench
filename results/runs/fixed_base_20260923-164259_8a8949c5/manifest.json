@@ -1,0 +1,156 @@
+{
+  "config": {
+    "agent": {
+      "abstention_quantile": 0.95,
+      "acceptance_delta": 0.02,
+      "arms": [
+        "never_correct",
+        "baselineB_llm_single",
+        "always_correct",
+        "random_correct",
+        "threshold_single",
+        "best_fixed",
+        "rgc",
+        "rgc_calibrated",
+        "oracle_correct"
+      ],
+      "calibrated_margin": 0.0,
+      "calibrated_risk_z": 0.0,
+      "risk_threshold": null,
+      "target_correction_rate": 0.3,
+      "use_adaptive_tools": true,
+      "use_anomaly": true,
+      "use_backtesting": true,
+      "use_changepoint": true,
+      "use_correction_loop": true,
+      "use_model_disagreement": true,
+      "use_self_critique": true,
+      "use_uncertainty": true
+    },
+    "data": {
+      "include_real": true,
+      "include_synthetic": true,
+      "max_series_length": 384,
+      "max_series_per_dataset": 30,
+      "real_datasets": [
+        "monash_tourism_monthly",
+        "monash_hospital",
+        "monash_nn5_daily",
+        "monash_covid_deaths",
+        "monash_saugeen",
+        "ett_h1",
+        "monash_m4_monthly"
+      ],
+      "series_per_family": 30,
+      "synthetic_families": [
+        "all"
+      ]
+    },
+    "description": "Correction policies applied on top of a fixed ETS base, rather than a per-instance backtest-selected base. Tests whether correction pays when the starting forecast is not already adaptively chosen.\n",
+    "eval": {
+      "alpha": 0.05,
+      "bootstrap_resamples": 10000,
+      "bootstrap_unit": "series",
+      "large_error_quantile": 0.8,
+      "n_calibration_bins": 15,
+      "oracle_delta": 0.1,
+      "primary_metric": "mase",
+      "secondary_metric": "crps_scaled"
+    },
+    "forecast": {
+      "base_selection": "fixed:ets",
+      "coverage_levels": [
+        0.8,
+        0.95
+      ],
+      "heavy_model_fraction": 0.25,
+      "heavy_models": [
+        "lstm",
+        "tcn",
+        "transformer",
+        "chronos"
+      ],
+      "horizons": [
+        1,
+        8,
+        24
+      ],
+      "models": [
+        "naive",
+        "seasonal_naive",
+        "drift",
+        "theta",
+        "ets",
+        "arima",
+        "linear_ar",
+        "random_forest",
+        "xgboost"
+      ]
+    },
+    "llm": {
+      "cache_only": false,
+      "max_calls": 5000,
+      "max_output_tokens": 1024,
+      "model": "gemini-3.5-flash-lite",
+      "provider": "gemini",
+      "subsample_instances": 800,
+      "temperature": 0.0
+    },
+    "n_jobs": 6,
+    "name": "fixed_base",
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "split": {
+      "min_train_length": 32,
+      "n_test_origins": 2,
+      "n_val_origins": 4,
+      "origin_stride": 8,
+      "test_length": 48,
+      "val_length": 48
+    }
+  },
+  "config_hash": "8a8949c55c28",
+  "config_name": "fixed_base",
+  "counters": {
+    "llm_cache_hit_rate": 0.06625,
+    "llm_cache_hits": 53.0,
+    "llm_calls": 747.0,
+    "llm_completion_tokens": 0.0,
+    "llm_errors": 747.0,
+    "llm_latency_s": 0.0,
+    "llm_prompt_tokens": 0.0,
+    "llm_total_tokens": 0.0,
+    "n_instances_test": 3284.0,
+    "n_policies": 8.0
+  },
+  "duration_s": 64348.26485967636,
+  "environment": {
+    "git": {
+      "available": false
+    },
+    "packages": {
+      "google.genai": "2.24.0",
+      "numpy": "2.4.1",
+      "pandas": "2.3.3",
+      "ruptures": "v1.1.10",
+      "scipy": "1.17.1",
+      "sklearn": "1.9.0",
+      "statsmodels": "0.15.0",
+      "torch": "2.13.0+cpu",
+      "xgboost": "3.4.1"
+    },
+    "platform": "Windows-11-10.0.26200-SP0",
+    "processor": "Intel64 Family 6 Model 142 Stepping 11, GenuineIntel",
+    "python": "3.12.10"
+  },
+  "error": null,
+  "finished_at": 1790226362.1673973,
+  "run_id": "fixed_base_20260923-164259_8a8949c5",
+  "started_at": 1790162013.9025376,
+  "status": "completed"
+}

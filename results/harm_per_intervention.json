@@ -1,0 +1,82 @@
+[
+  {
+    "family": "Gemini 3.5 Flash-Lite",
+    "arm": "llm_single",
+    "n_series": 578,
+    "intervention_rate": 0.6868512110726643,
+    "degradation_pct": 8.371931097171155,
+    "harm_per_intervention": 12.188856861876392,
+    "hpi_ci_lo": 4.794006160373781,
+    "hpi_ci_hi": 20.29006692369332
+  },
+  {
+    "family": "Gemini 3.5 Flash-Lite",
+    "arm": "llm_critique_gate",
+    "n_series": 578,
+    "intervention_rate": 0.698961937716263,
+    "degradation_pct": 7.4966385318805315,
+    "harm_per_intervention": 10.72538879066076,
+    "hpi_ci_lo": 3.904296440902369,
+    "hpi_ci_hi": 18.43700622342456
+  },
+  {
+    "family": "Gemini 3.5 Flash-Lite",
+    "arm": "rgc_llm_router",
+    "n_series": 578,
+    "intervention_rate": 0.14359861591695502,
+    "degradation_pct": 4.866007320508934,
+    "harm_per_intervention": 33.886171460893536,
+    "hpi_ci_lo": 6.638679706904995,
+    "hpi_ci_hi": 70.06926746431121
+  },
+  {
+    "family": "Gemini 3.5 Flash-Lite",
+    "arm": "always_correct",
+    "n_series": 578,
+    "intervention_rate": 1.0,
+    "degradation_pct": 5.730828781068355,
+    "harm_per_intervention": 5.730828781068355,
+    "hpi_ci_lo": -0.4755265219308503,
+    "hpi_ci_hi": 14.433616191049344
+  },
+  {
+    "family": "Qwen3.8-27B",
+    "arm": "llm_single",
+    "n_series": 140,
+    "intervention_rate": 0.44285714285714284,
+    "degradation_pct": 5.190285363957746,
+    "harm_per_intervention": 11.719999208936846,
+    "hpi_ci_lo": 1.9347227868873633,
+    "hpi_ci_hi": 23.018899656711238
+  },
+  {
+    "family": "Qwen3.8-27B",
+    "arm": "llm_critique_gate",
+    "n_series": 140,
+    "intervention_rate": 0.5571428571428572,
+    "degradation_pct": 5.84860749965784,
+    "harm_per_intervention": 10.497500640411507,
+    "hpi_ci_lo": 2.6083811820266964,
+    "hpi_ci_hi": 19.45816141986861
+  },
+  {
+    "family": "GPT-OSS-20B (reasoning)",
+    "arm": "llm_single",
+    "n_series": 60,
+    "intervention_rate": 0.9,
+    "degradation_pct": 5.516031094898833,
+    "harm_per_intervention": 6.12892343877648,
+    "hpi_ci_lo": -3.2481801048977896,
+    "hpi_ci_hi": 16.229261156746976
+  },
+  {
+    "family": "GPT-OSS-20B (reasoning)",
+    "arm": "llm_critique_gate",
+    "n_series": 60,
+    "intervention_rate": 0.7833333333333333,
+    "degradation_pct": 5.616782176637083,
+    "harm_per_intervention": 7.170360225494149,
+    "hpi_ci_lo": -4.815658179125918,
+    "hpi_ci_hi": 19.553633442257127
+  }
+]

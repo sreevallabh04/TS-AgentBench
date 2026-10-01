@@ -1,0 +1,86 @@
+Verifying 82 identifiers...
+
+  [ok]         2602.01776  Position: Beyond Model-Centric Prediction -- Agentic Time Series Forecas
+  [ok]         2510.01538  TimeSeriesScientist: A General-Purpose AI Agent for Time Series Analysis
+  [ok]         2605.14389  Nexus : An Agentic Framework for Time Series Forecasting
+  [ok]         2604.27840  CastFlow: Learning Role-Specialized Agentic Workflows for Time Series Fo
+  [ok]         2606.02497  Bridging the Last Mile of Time Series Forecasting with LLM Agents
+  [ok]         2508.19279  FLAIRR-TS -- Forecasting LLM-Agents with Iterative Refinement and Retrie
+  [ok]         2605.10038  TimeClaw: A Time-Series AI Agent with Exploratory Execution Learning
+  [ok]         2510.07432  TS-Agent: Understanding and Reasoning Over Raw Time Series via Iterative
+  [ok]         2602.13272  TemporalBench: A Benchmark for Evaluating LLM-Based Agents on Contextual
+  [ok]         10.1145/3770855.3817485  TemporalBench: A Benchmark for Evaluating LLM-Based Agents on Contextual
+  [ok]         2606.01498  TimeSage-MT: A Multi-Turn Benchmark for Evaluating Agentic Time Series R
+  [ok]         2505.13291  TimeSeriesGym: A Scalable Benchmark for (Time Series) Machine Learning E
+  [ok]         2605.25045  AION: Next-Generation Tasks and Practical Harness for Time Series
+  [ok]         2410.10393  GIFT-Eval: A Benchmark For General Time Series Forecasting Model Evaluat
+  [ok]         2105.06643  Monash Time Series Forecasting Archive
+  [ok]         2310.01798  Large Language Models Cannot Self-Correct Reasoning Yet
+  [ok]         10.1162/tacl_a_00713  When Can LLMs <i>Actually</i> Correct Their Own Mistakes? A Critical Sur
+  [ok]         1908.11500  FFORMPP: Feature-based forecast model performance prediction
+  [ok]         10.1007/s10994-025-06881-3  Mast: interpretable stress testing via meta-learning for forecasting mod
+  [ok]         2607.10059  AgentAbstain: Do LLM Agents Know When Not to Act?
+  [ok]         2106.00170  Adaptive Conformal Inference Under Distribution Shift
+  [ok]         1705.08500  Selective Classification for Deep Neural Networks
+  [ok]         1706.04599  On Calibration of Modern Neural Networks
+  [ok]         2012.07436  Informer: Beyond Efficient Transformer for Long Sequence Time-Series For
+  [ok]         2403.07815  Chronos: Learning the Language of Time Series
+  [ok]         2211.14730  A Time Series is Worth 64 Words: Long-term Forecasting with Transformers
+  [ok]         10.1016/j.ijforecast.2019.04.014  The M4 Competition: 100,000 time series and 61 forecasting methods
+  [ok]         10.1080/07350015.1995.10524599  Comparing Predictive Accuracy
+  [ok]         10.1016/S0169-2070(96)00719-4  Testing the equality of prediction mean squared errors
+  [ok]         10.1016/j.ijforecast.2006.03.001  Another look at measures of forecast accuracy
+  [ok]         10.1198/016214506000001437  Strictly Proper Scoring Rules, Prediction, and Estimation
+  [ok]         2602.01776  Position: Beyond Model-Centric Prediction -- Agentic Time Series Forecas
+  [ok]         2510.01538  TimeSeriesScientist: A General-Purpose AI Agent for Time Series Analysis
+  [ok]         2605.14389  Nexus : An Agentic Framework for Time Series Forecasting
+  [ok]         2604.27840  CastFlow: Learning Role-Specialized Agentic Workflows for Time Series Fo
+  [ok]         2605.10038  TimeClaw: A Time-Series AI Agent with Exploratory Execution Learning
+  [ok]         2606.02497  Bridging the Last Mile of Time Series Forecasting with LLM Agents
+  [ok]         2508.19279  FLAIRR-TS -- Forecasting LLM-Agents with Iterative Refinement and Retrie
+  [ok]         2510.07432  TS-Agent: Understanding and Reasoning Over Raw Time Series via Iterative
+  [ok]         2605.30002  KairosAgent: Agentic Time Series Forecasting with Fused Semantic Reasoni
+  [ok]         2409.17515  From News to Forecast: Integrating Event Analysis in LLM-Based Time Seri
+  [ok]         2505.12594  AD-AGENT: A Multi-agent Framework for End-to-end Anomaly Detection
+  [ok]         2310.01798  Large Language Models Cannot Self-Correct Reasoning Yet
+  [ok]         10.1162/tacl_a_00713  When Can LLMs <i>Actually</i> Correct Their Own Mistakes? A Critical Sur
+  [ok]         2303.17651  Self-Refine: Iterative Refinement with Self-Feedback
+  [ok]         2303.11366  Reflexion: Language Agents with Verbal Reinforcement Learning
+  [ok]         2210.03629  ReAct: Synergizing Reasoning and Acting in Language Models
+  [ok]         2406.17008  Meta-learning and Data Augmentation for Stress Testing Forecasting Model
+  [ok]         10.1007/s10994-025-06881-3  Mast: interpretable stress testing via meta-learning for forecasting mod
+  [ok]         1908.11500  FFORMPP: Feature-based forecast model performance prediction
+  [ok]         10.1145/3715149  Evaluation-free Time-series Forecasting Model Selection via Meta-learnin
+  [ok]         2602.13272  TemporalBench: A Benchmark for Evaluating LLM-Based Agents on Contextual
+  [ok]         10.1145/3770855.3817485  TemporalBench: A Benchmark for Evaluating LLM-Based Agents on Contextual
+  [ok]         2606.01498  TimeSage-MT: A Multi-Turn Benchmark for Evaluating Agentic Time Series R
+  [ok]         2608.14270  TimeSage-EV: A Live Benchmark for Agentic Time Series Analysis in Evolvi
+  [ok]         2505.13291  TimeSeriesGym: A Scalable Benchmark for (Time Series) Machine Learning E
+  [ok]         2605.25045  AION: Next-Generation Tasks and Practical Harness for Time Series
+  [ok]         2503.16858  MTBench: A Multimodal Time Series Benchmark for Temporal Reasoning and Q
+  [ok]         2606.15107  Towards Verifiable Agentic Data Science: Solving Irregular TSQA Via Tool
+  [ok]         2410.10393  GIFT-Eval: A Benchmark For General Time Series Forecasting Model Evaluat
+  [ok]         2105.06643  Monash Time Series Forecasting Archive
+  [ok]         2402.05203  Bellman Conformal Inference: Calibrating Prediction Intervals For Time S
+  [ok]         2508.13362  Optimization-based Online Conformal Prediction for Multi-step Forecastin
+  [ok]         2302.07869  Improved Online Conformal Prediction via Strongly Adaptive Online Learni
+  [ok]         2511.13608  A Gentle Introduction to Conformal Time Series Forecasting
+  [ok]         2606.15953  Drift-Aware Spectral Conformal Prediction for Non-Exchangeable Streaming
+  [ok]         2106.00170  Adaptive Conformal Inference Under Distribution Shift
+  [ok]         2307.16895  Conformal PID Control for Time Series Prediction
+  [ok]         1705.08500  Selective Classification for Deep Neural Networks
+  [ok]         1706.04599  On Calibration of Modern Neural Networks
+  [ok]         2607.10059  AgentAbstain: Do LLM Agents Know When Not to Act?
+  [ok]         2604.03904  I-CALM: Incentivizing Confidence-Aware Abstention for LLM Selective Answ
+  [ok]         2403.07815  Chronos: Learning the Language of Time Series
+  [ok]         2310.10688  A decoder-only foundation model for time-series forecasting
+  [ok]         2402.02592  Unified Training of Universal Time Series Forecasting Transformers
+  [ok]         2310.08278  Lag-Llama: Towards Foundation Models for Probabilistic Time Series Forec
+  [ok]         2402.03885  MOMENT: A Family of Open Time-series Foundation Models
+  [ok]         2310.07820  Large Language Models Are Zero-Shot Time Series Forecasters
+  [ok]         2310.01728  Time-LLM: Time Series Forecasting by Reprogramming Large Language Models
+  [ok]         2211.14730  A Time Series is Worth 64 Words: Long-term Forecasting with Transformers
+  [ok]         2205.13504  Are Transformers Effective for Time Series Forecasting?
+  [ok]         2012.07436  Informer: Beyond Efficient Transformer for Long Sequence Time-Series For
+
+82 verified, 0 title mismatches, 0 unresolved, out of 82.

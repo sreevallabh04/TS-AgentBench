@@ -1,0 +1,60 @@
+\begin{tabular}{lllrrrrrr}
+\toprule
+Metric & Model & Policy & Series & Series mean & $\Delta$ & 95\% CI & Win rate & LLM calls \\
+\midrule
+Point (MASE) & Gemini 3.5 Flash-Lite & never correct & 578 & 1.2220 & 0.00\% & [0.00, 0.00] & 50.0\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite & always ensemble & 578 & 1.1520 & -5.73\%$^\dagger$ & [-9.54, -1.99] & 53.9\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite & rgc calibrated & 578 & 1.2196 & -0.19\% & [-0.72, 0.26] & 50.3\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite & llm single & 578 & 1.3243 & 8.37\%$^\dagger$ & [3.29, 13.94] & 42.2\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite & llm critique gate & 578 & 1.3136 & 7.50\%$^\dagger$ & [2.73, 12.89] & 42.8\% & 288 \\
+Point (MASE) & Gemini 3.5 Flash-Lite & rgc llm router & 578 & 1.2814 & 4.87\%$^\dagger$ & [0.95, 10.06] & 47.5\% & 258 \\
+Point (MASE) & Gemini 3.5 Flash-Lite & always correct & 578 & 1.2920 & 5.73\% & [-0.48, 14.43] & 47.1\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite & never correct & 578 & 1.0629 & 0.00\% & [0.00, 0.00] & 50.0\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite & always ensemble & 578 & 0.9503 & -10.59\%$^\dagger$ & [-15.14, -6.70] & 53.8\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite & rgc calibrated & 578 & 1.0064 & -5.31\%$^\dagger$ & [-9.36, -1.91] & 53.5\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite & llm single & 578 & 1.1530 & 8.48\%$^\dagger$ & [3.00, 14.55] & 43.9\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite & llm critique gate & 578 & 1.1493 & 8.13\%$^\dagger$ & [3.17, 13.92] & 44.3\% & 288 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite & rgc llm router & 578 & 1.1015 & 3.63\%$^\dagger$ & [0.48, 8.04] & 48.7\% & 258 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite & always correct & 578 & 1.0979 & 3.29\% & [-4.92, 13.64] & 51.6\% & 0 \\
+Point (MASE) & Qwen3.8-27B (Groq) & never correct & 140 & 0.8936 & 0.00\% & [0.00, 0.00] & 50.0\% & 0 \\
+Point (MASE) & Qwen3.8-27B (Groq) & always ensemble & 140 & 0.8892 & -0.50\% & [-5.17, 4.69] & 51.4\% & 0 \\
+Point (MASE) & Qwen3.8-27B (Groq) & rgc calibrated & 140 & 0.8850 & -0.96\% & [-2.85, 0.00] & 50.7\% & 0 \\
+Point (MASE) & Qwen3.8-27B (Groq) & llm single & 140 & 0.9400 & 5.19\%$^\dagger$ & [0.86, 10.19] & 46.8\% & 0 \\
+Point (MASE) & Qwen3.8-27B (Groq) & llm critique gate & 140 & 0.9458 & 5.85\%$^\dagger$ & [1.45, 10.84] & 45.7\% & 11 \\
+Probabilistic (CRPS) & Qwen3.8-27B (Groq) & never correct & 140 & 0.7513 & 0.00\% & [0.00, 0.00] & 50.0\% & 0 \\
+Probabilistic (CRPS) & Qwen3.8-27B (Groq) & always ensemble & 140 & 0.7168 & -4.59\% & [-10.64, 0.96] & 52.1\% & 0 \\
+Probabilistic (CRPS) & Qwen3.8-27B (Groq) & rgc calibrated & 140 & 0.7097 & -5.54\%$^\dagger$ & [-10.73, -0.69] & 57.1\% & 0 \\
+Probabilistic (CRPS) & Qwen3.8-27B (Groq) & llm single & 140 & 0.7941 & 5.70\% & [-0.48, 12.33] & 48.6\% & 0 \\
+Probabilistic (CRPS) & Qwen3.8-27B (Groq) & llm critique gate & 140 & 0.7892 & 5.04\% & [-1.22, 11.81] & 50.7\% & 11 \\
+Point (MASE) & GPT-OSS-20B reasoning (Groq) & never correct & 60 & 1.0447 & 0.00\% & [0.00, 0.00] & 50.0\% & 0 \\
+Point (MASE) & GPT-OSS-20B reasoning (Groq) & always ensemble & 60 & 1.0974 & 5.04\% & [-9.06, 24.71] & 48.3\% & 0 \\
+Point (MASE) & GPT-OSS-20B reasoning (Groq) & rgc calibrated & 60 & 1.0454 & 0.06\% & [-0.16, 0.34] & 50.0\% & 0 \\
+Point (MASE) & GPT-OSS-20B reasoning (Groq) & llm single & 60 & 1.1024 & 5.52\% & [-2.92, 14.61] & 50.0\% & 60 \\
+Point (MASE) & GPT-OSS-20B reasoning (Groq) & llm critique gate & 60 & 1.1034 & 5.62\% & [-3.77, 15.32] & 47.5\% & 60 \\
+Probabilistic (CRPS) & GPT-OSS-20B reasoning (Groq) & never correct & 60 & 0.9179 & 0.00\% & [0.00, 0.00] & 50.0\% & 0 \\
+Probabilistic (CRPS) & GPT-OSS-20B reasoning (Groq) & always ensemble & 60 & 0.8967 & -2.31\% & [-16.91, 13.54] & 53.3\% & 0 \\
+Probabilistic (CRPS) & GPT-OSS-20B reasoning (Groq) & rgc calibrated & 60 & 0.9341 & 1.76\% & [-3.18, 7.54] & 51.7\% & 0 \\
+Probabilistic (CRPS) & GPT-OSS-20B reasoning (Groq) & llm single & 60 & 0.9776 & 6.49\% & [-2.30, 15.67] & 42.5\% & 60 \\
+Probabilistic (CRPS) & GPT-OSS-20B reasoning (Groq) & llm critique gate & 60 & 0.9805 & 6.81\% & [-1.72, 15.52] & 43.3\% & 60 \\
+Point (MASE) & Gemini 3.5 Flash-Lite, 8-shot & never correct & 60 & 1.0447 & 0.00\% & [0.00, 0.00] & 50.0\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite, 8-shot & always ensemble & 60 & 1.0974 & 5.04\% & [-9.06, 24.71] & 48.3\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite, 8-shot & rgc calibrated & 60 & 1.0454 & 0.06\% & [-0.16, 0.34] & 50.0\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite, 8-shot & llm single & 60 & 1.1142 & 6.65\% & [-1.25, 15.77] & 45.8\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite, 8-shot & llm critique gate & 60 & 1.3462 & 28.85\% & [-0.49, 80.30] & 46.7\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite, 8-shot & never correct & 60 & 0.9179 & 0.00\% & [0.00, 0.00] & 50.0\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite, 8-shot & always ensemble & 60 & 0.8967 & -2.31\% & [-16.91, 13.54] & 53.3\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite, 8-shot & rgc calibrated & 60 & 0.9341 & 1.76\% & [-3.18, 7.54] & 51.7\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite, 8-shot & llm single & 60 & 0.9944 & 8.33\%$^\dagger$ & [0.49, 16.66] & 40.0\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite, 8-shot & llm critique gate & 60 & 1.1299 & 23.09\%$^\dagger$ & [1.96, 58.52] & 39.2\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite, 0-shot (matched) & never correct & 60 & 1.0447 & 0.00\% & [0.00, 0.00] & 50.0\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite, 0-shot (matched) & always ensemble & 60 & 1.0974 & 5.04\% & [-9.06, 24.71] & 48.3\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite, 0-shot (matched) & rgc calibrated & 60 & 1.0454 & 0.06\% & [-0.16, 0.34] & 50.0\% & 0 \\
+Point (MASE) & Gemini 3.5 Flash-Lite, 0-shot (matched) & llm single & 60 & 1.1330 & 8.45\%$^\dagger$ & [3.00, 14.72] & 39.2\% & 50 \\
+Point (MASE) & Gemini 3.5 Flash-Lite, 0-shot (matched) & llm critique gate & 60 & 1.1407 & 9.19\%$^\dagger$ & [1.69, 17.60] & 38.3\% & 50 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite, 0-shot (matched) & never correct & 60 & 0.9179 & 0.00\% & [0.00, 0.00] & 50.0\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite, 0-shot (matched) & always ensemble & 60 & 0.8967 & -2.31\% & [-16.91, 13.54] & 53.3\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite, 0-shot (matched) & rgc calibrated & 60 & 0.9341 & 1.76\% & [-3.18, 7.54] & 51.7\% & 0 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite, 0-shot (matched) & llm single & 60 & 0.9981 & 8.73\%$^\dagger$ & [2.75, 15.62] & 38.3\% & 50 \\
+Probabilistic (CRPS) & Gemini 3.5 Flash-Lite, 0-shot (matched) & llm critique gate & 60 & 1.0195 & 11.06\%$^\dagger$ & [4.34, 18.85] & 34.2\% & 50 \\
+\bottomrule
+\end{tabular}

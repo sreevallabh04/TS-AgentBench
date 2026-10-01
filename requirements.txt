@@ -1,0 +1,45 @@
+# TS-AgentBench -- pinned to the versions used for the reported results.
+# Python 3.12.10 on Windows, CPU-only.
+# Install:  python -m pip install -r requirements.txt
+
+# --- core numerics ---
+numpy==2.4.1
+pandas==2.3.3
+scipy==1.17.1
+pyarrow==25.0.0
+
+# --- classical / statistical forecasting ---
+statsmodels==0.15.0
+
+# --- machine-learning forecasters & meta-models ---
+scikit-learn==1.9.0
+xgboost==3.4.1
+
+# --- deep forecasters (CPU build) ---
+torch==2.13.0
+
+# --- change-point detection ---
+ruptures==1.1.10
+
+# --- LLM provider ---
+google-genai==2.24.0
+python-dotenv==1.2.1
+
+# --- orchestration / io ---
+PyYAML==6.0.3
+joblib==1.5.3
+requests==2.34.2
+tqdm==4.70.0
+
+# --- figures & dashboard ---
+matplotlib==3.11.1
+streamlit==1.53.1
+
+# --- tests ---
+pytest==9.0.2
+
+# --- optional: time-series foundation model baseline ---
+# Installed separately; see scripts/setup_foundation_model.py. Kept out of the
+# core requirements so the benchmark remains installable without a large
+# model download.
+# chronos-forecasting

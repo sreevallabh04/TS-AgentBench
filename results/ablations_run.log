@@ -1,0 +1,35 @@
+15:03:28 INFO    ablations              replaying tensor from main_20260918-233847_3fa46848
+15:04:48 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+15:04:50 INFO    ablations              full                     MASE=1.0132 regret=0.2935 rate=20.0%
+15:05:02 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+15:05:05 INFO    ablations              no_self_critique         MASE=1.0151 regret=0.2953 rate=24.1%
+15:05:15 INFO    reliability            reliability estimator fitted on 6407 validation instances, 61 features (base rates: large_error=0.200, should_correct=0.610)
+15:05:17 INFO    ablations              no_uncertainty           MASE=0.9986 regret=0.2788 rate=21.3%
+15:05:25 INFO    reliability            reliability estimator fitted on 6407 validation instances, 61 features (base rates: large_error=0.200, should_correct=0.610)
+15:05:26 INFO    ablations              no_model_disagreement    MASE=1.0119 regret=0.2921 rate=20.2%
+15:05:34 INFO    reliability            reliability estimator fitted on 6407 validation instances, 60 features (base rates: large_error=0.200, should_correct=0.610)
+15:05:36 INFO    ablations              no_changepoint           MASE=1.0029 regret=0.2831 rate=20.5%
+15:05:42 INFO    reliability            reliability estimator fitted on 6407 validation instances, 59 features (base rates: large_error=0.200, should_correct=0.610)
+15:05:43 INFO    ablations              no_anomaly               MASE=1.0108 regret=0.2911 rate=20.1%
+15:05:52 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+15:05:54 INFO    ablations              no_adaptive_tools        MASE=1.0151 regret=0.2953 rate=24.1%
+15:05:59 INFO    reliability            reliability estimator fitted on 6407 validation instances, 58 features (base rates: large_error=0.200, should_correct=0.610)
+15:06:00 INFO    ablations              no_backtesting           MASE=1.0404 regret=0.3206 rate=27.6%
+15:06:06 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+15:06:06 INFO    ablations              no_correction_loop       MASE=1.0090 regret=0.2893 rate=0.0%
+
+=== Ablation study (removing one component at a time) ===
+             ablation   mase  delta_vs_full_pct  correction_rate  helped  harmed  compute_cost
+                 full 1.0132             0.0000           0.2001  0.5099  0.3988        0.7920
+     no_self_critique 1.0151             0.1815           0.2406  0.3684  0.3582        2.3761
+       no_uncertainty 0.9986            -1.4487           0.2135  0.5007  0.4080        0.8331
+no_model_disagreement 1.0119            -0.1374           0.2025  0.5068  0.4090        0.7957
+       no_changepoint 1.0029            -1.0228           0.2049  0.5052  0.4012        0.8158
+           no_anomaly 1.0108            -0.2426           0.2010  0.4348  0.3894        0.7811
+    no_adaptive_tools 1.0151             0.1815           0.2406  0.3684  0.3582        2.3761
+       no_backtesting 1.0404             2.6786           0.2762  0.3484  0.4300        0.8286
+   no_correction_loop 1.0090            -0.4193           0.0000     NaN     NaN        0.0000
+
+Saved to D:\paper\TS-AgentBench\results\ablations.parquet
+
+A positive delta means removing the component made things worse, i.e. the component was contributing.

@@ -1,0 +1,13 @@
+\begin{tabular}{lp{3.4cm}p{2.9cm}rrlp{3.6cm}}
+\toprule
+ID & Hypothesis & Test & Result & $p_{\text{adj}}$ & Verdict & Qualification \\
+\midrule
+H1 & Reliability-gated correction improves accuracy over a non-correcting agent. & series-mean change vs never (\%, positive = worse); Wilcoxon Holm-adj. & 0.421 & 0.005 & not supported & the effect is a small, significant degradation \\
+H2 & Gains concentrate under distribution shift, anomalies and regime change. & difference-in-differences over 48 perturbed strata (Holm) & 2.000 & 0.005 & supported & 2 of 48 strata after Holm; both unconditional correction, mildest severity \\
+H3 & Forecast failure is predictable from pre-hoc diagnostics. & AUROC of the risk estimator & 0.793 & --- & supported & supports triage, not correction; the gate built on it does not win \\
+H4 & Selective tool use matches exhaustive use at lower cost. & mean action evaluations per instance & 0.088 & --- & supported & because the gate rarely acts, not because it acts well \\
+H5 & Reliability-gated confidence is better calibrated than an agent's verbalised confidence. & paired bootstrap over series on the ECE difference & 0.220 & --- & supported & against the model's verbalised confidence, an easy comparator \\
+H6 & Gains are not explained by extra compute alone (vs. rate-matched random correction). & RGC vs. random\_correct & 0.023 & --- & supported & because the gate rarely acts; it does not beat never correcting \\
+H7 & A quantitative gate decides better than verbal self-critique (pre-registered comparison). & mean oracle regret, calibrated gate vs. LLM critique gate & 0.094 & --- & supported & the gate's regret is close to never correcting's; it wins by not acting \\
+\bottomrule
+\end{tabular}

@@ -1,0 +1,42 @@
+# Secrets -- never commit
+.env
+.env.*
+!.env.example
+*.key
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+.pytest_cache/
+.ipynb_checkpoints/
+
+# Data & artifacts (regenerable; see scripts/prepare_data.py)
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/cache/*
+!data/cache/.gitkeep
+results/runs/*
+!results/runs/.gitkeep
+# The two runs the manuscript reports are released with it (deviation D11 compares them).
+# Abandoned and smoke runs stay out.
+!results/runs/main_20260918-233847_3fa46848/
+!results/runs/fixed_base_20260923-164259_8a8949c5/
+
+# LLM response cache: released, so every LLM arm replays without an API key.
+!data/cache/llm/
+!data/cache/llm/**
+
+# Paper build artifacts
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.bbl
+paper/*.blg
+paper/*.pdf
+!paper/figures/*.pdf
+paper/.build/

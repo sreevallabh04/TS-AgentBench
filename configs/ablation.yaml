@@ -1,0 +1,18 @@
+# Ablation study. Shares the main experiment's cached tensor, so every ablation sees
+# identical forecasts and identical action outcomes -- only the policy changes.
+#
+#   python scripts/run_ablations.py --config configs/ablation.yaml
+
+extends: experiment.yaml
+
+name: ablation
+description: >
+  Component ablations of the reliability-gated correction policy, replayed against the
+  main experiment's counterfactual tensor.
+
+agent:
+  arms: [never_correct, rgc]
+
+llm:
+  max_calls: 0
+  cache_only: true

@@ -1,0 +1,8 @@
+n=3284, base rate of large_error = 20.0%, AUROC=0.793
+
+ review top-k%  precision   recall   lift
+            5%      76.2%    19.0%   3.81x
+           10%      66.5%    33.2%   3.32x
+           20%      51.1%    51.0%   2.55x
+           30%      42.4%    63.6%   2.12x
+           50%      32.2%    80.5%   1.61x

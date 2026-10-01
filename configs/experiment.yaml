@@ -1,0 +1,59 @@
+# Main experiment: the vertical slice that produces the paper's headline results.
+#
+#   python run_experiment.py --config configs/experiment.yaml
+#
+# Scale is set so the non-LLM stages complete overnight on a CPU-only machine, and so
+# the LLM arms stay inside a few thousand cached calls. Scaling up is a change to
+# `series_per_family` / `max_series_per_dataset` / `subsample_instances`, not a code
+# change.
+
+extends: base.yaml
+
+name: main
+description: >
+  Full TS-AgentBench evaluation: all arms, synthetic plus real data, three horizons,
+  five seeds. Produces the tables and figures referenced by the manuscript.
+
+seeds: [0, 1, 2, 3, 4]
+n_jobs: -1
+
+data:
+  include_synthetic: true
+  include_real: true
+  series_per_family: 30
+  real_datasets:
+    - monash_tourism_monthly
+    - monash_hospital
+    - monash_nn5_daily
+    - monash_covid_deaths
+    - monash_saugeen
+    - ett_h1
+    - monash_m4_monthly
+  max_series_per_dataset: 30
+  max_series_length: 384
+
+forecast:
+  horizons: [1, 8, 24]
+
+agent:
+  target_correction_rate: 0.30
+  acceptance_delta: 0.02
+
+llm:
+  model: gemini-3.5-flash-lite
+  max_calls: 5000
+  cache_only: false
+  # LLM arms run on a stratified subsample; non-LLM arms use every instance. This is
+  # the documented consequence of the API budget, not a silent shortcut.
+  subsample_instances: 800
+
+split:
+  # Sized so the full tensor completes in roughly two hours on 8 CPU cores.
+  # Statistical power here comes primarily from the number of *series* (the bootstrap
+  # unit), so trimming origins per series is the cheapest lever. Scaling up is a change
+  # to these numbers, not to any code.
+  val_length: 48
+  test_length: 48
+  n_val_origins: 4
+  n_test_origins: 2
+  origin_stride: 8

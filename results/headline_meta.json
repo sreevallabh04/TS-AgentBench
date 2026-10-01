@@ -1,0 +1,41 @@
+{
+  "run": "main_20260918-233847_3fa46848",
+  "geo_offset": 0.001,
+  "metrics": {
+    "mase": {
+      "accept": 1.0089966308454663,
+      "oracle_inflated": 0.7197366137795062,
+      "trusted_actions": [
+        "abstain",
+        "damp_trend",
+        "ensemble",
+        "respecify_seasonality",
+        "transform"
+      ],
+      "gate": {
+        "margin": 0.1,
+        "risk_z": 0.5
+      },
+      "n_series": 578
+    },
+    "crps_scaled": {
+      "accept": 0.8620717830859502,
+      "oracle_inflated": 0.5834464014928405,
+      "trusted_actions": [
+        "abstain",
+        "damp_trend",
+        "ensemble",
+        "recalibrate_intervals",
+        "refit_post_changepoint",
+        "respecify_seasonality",
+        "switch_model",
+        "transform"
+      ],
+      "gate": {
+        "margin": 0.0,
+        "risk_z": 0.0
+      },
+      "n_series": 578
+    }
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "metric": "mase",
+  "model": "openai/gpt-oss-20b",
+  "n": 60,
+  "base_rate": 0.6,
+  "auroc_critique": 0.4930555555555556,
+  "auroc_single": 0.5902777777777778,
+  "auroc_arithmetic": 0.7743055555555556,
+  "agreement": 0.8166666666666667,
+  "jaccard": 0.8035714285714286,
+  "rows": [
+    {
+      "arm": "llm_critique_gate (critique said yes)",
+      "act_rate": 0.7833333333333333,
+      "precision_vs_should_correct": 0.5957446808510638,
+      "helped": 0.3617021276595745,
+      "harmed": 0.425531914893617
+    },
+    {
+      "arm": "llm_single (no critique)",
+      "act_rate": 0.9,
+      "precision_vs_should_correct": 0.6481481481481481,
+      "helped": 0.42592592592592593,
+      "harmed": 0.42592592592592593
+    },
+    {
+      "arm": "random at the same 78% rate",
+      "act_rate": 0.75,
+      "precision_vs_should_correct": 0.6,
+      "helped": NaN,
+      "harmed": NaN
+    }
+  ],
+  "verdict": "AUROC 0.493 (-0.007 vs chance); selection precision 59.6% vs 60.0% for a coin firing at the same rate and a 60.0% base rate; 80% of its intervention set is shared with the uncritiqued arm"
+}

@@ -1,0 +1,30 @@
+# Experimental condition: a conventional single-model pipeline.
+#
+# The main experiment chooses the base forecast by rolling-origin backtest over the
+# whole pool on every instance. That is itself a strong adaptive procedure, and it
+# leaves correction almost nothing to repair -- which confounds "self-correction does
+# not work" with "self-correction had nothing to fix".
+#
+# Here the base is fixed to ETS, the model the backtest selector picks most often and a
+# realistic default for a deployed pipeline. Everything else -- pool, diagnostics,
+# action space, splits, seeds -- is identical to configs/experiment.yaml, so the two
+# runs differ in exactly one factor.
+#
+#   python run_experiment.py --config configs/fixed_base.yaml
+
+extends: experiment.yaml
+
+name: fixed_base
+description: >
+  Correction policies applied on top of a fixed ETS base, rather than a per-instance
+  backtest-selected base. Tests whether correction pays when the starting forecast is
+  not already adaptively chosen.
+
+forecast:
+  base_selection: "fixed:ets"
+
+# Bounded parallelism. n_jobs: -1 (inherited) fits the whole model pool on every core at
+# once, and on this machine that exhausted memory and collapsed throughput on an earlier
+# attempt. This is a purely computational setting: it changes how long the run takes and
+# nothing about what it computes, so the two conditions remain a single-factor comparison.
+n_jobs: 6

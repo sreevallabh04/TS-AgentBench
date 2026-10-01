@@ -1,0 +1,11 @@
+14:09:39 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+n=3284, base rate of large-error instances = 20.0%, AUROC = 0.793
+
+review_budget  n_reviewed precision recall  lift
+           5%         164     76.2%  19.0% 3.81x
+          10%         328     66.5%  33.2% 3.32x
+          20%         656     51.1%  51.0% 2.55x
+          30%         985     42.4%  63.6% 2.12x
+          50%        1642     32.2%  80.5% 1.61x
+
+Saved to D:\paper\TS-AgentBench\results\triage.parquet

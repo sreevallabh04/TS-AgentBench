@@ -1,0 +1,16 @@
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3023: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3024: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+
+=== mase (n=3284) ===
+  never_correct              mean=1.0090 (+0.00%)  geo=0.4719 (+0.00%)  p=nan
+  search_all                 mean=1.0079 (-0.11%)  geo=0.4713 (-0.14%)  p=0.572
+  diagnose_then_restrict     mean=1.0092 (+0.02%)  geo=0.4722 (+0.05%)  p=0.612
+  search_all vs diagnose_then_restrict: p=0.33  (search wins on 0.4% of instances)
+
+=== crps_scaled (n=3284) ===
+  never_correct              mean=0.8621 (+0.00%)  geo=0.4232 (+0.00%)  p=nan
+  search_all                 mean=0.8275 (-4.01%)  geo=0.4015 (-5.11%)  p=8.91e-13
+  diagnose_then_restrict     mean=0.8034 (-6.81%)  geo=0.4129 (-2.42%)  p=5.98e-17
+  search_all vs diagnose_then_restrict: p=0.00571  (search wins on 15.9% of instances)

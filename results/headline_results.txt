@@ -1,0 +1,70 @@
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3023: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3024: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+14:54:57 INFO    calibration            gain calibrator fitted on 12626 nested pairs; 5/9 actions show transferable signal: ['abstain', 'damp_trend', 'ensemble', 'respecify_seasonality', 'transform']
+15:13:05 INFO    calibration            gain calibrator fitted on 12626 nested pairs; 8/9 actions show transferable signal: ['abstain', 'damp_trend', 'ensemble', 'recalibrate_intervals', 'refit_post_changepoint', 'respecify_seasonality', 'switch_model', 'transform']
+
+========================================================================================================
+POINT ACCURACY (MASE)   n=3284 instances / 578 series
+========================================================================================================
+SERIES-LEVEL (confirmatory: bootstrap over series, ANALYSIS_PLAN S7)
+policy             series mean   delta %            95% CI (%)  win rate          p
+never_correct           0.9957    +0.00%   [  +0.00,   +0.00]    50.0%        nan
+rgc_calibrated          0.9920    -0.38%   [  -0.97,   +0.04]    50.2%       0.37
+always_ensemble         0.9491    -4.69%   [ -11.75,   +0.60]    60.0%    4.2e-08
+always_correct          1.0766    +8.13%*  [  +2.73,  +15.99]    45.8%    0.00033
+best_fixed              1.0770    +8.16%*  [  +2.76,  +16.05]    45.8%    0.00034
+random_correct          1.0368    +4.13%*  [  +2.12,   +6.46]    42.6%      7e-08
+  * = 95% series-level bootstrap CI excludes zero. A policy can improve the mean
+    while winning on under half of series; both are shown because they differ here.
+
+INSTANCE-LEVEL (descriptive only -- within-series dependence makes these intervals too narrow)
+policy                  mean    vs ref  geo-mean    vs ref    median   acts   help   harm
+never_correct         1.0090    +0.00%    0.4719    +0.00%    0.6121     0%     0%     0%
+rgc_calibrated        1.0079    -0.11%    0.4713    -0.14%    0.6121     2%    31%    27%
+always_ensemble       0.9670    -4.16%    0.4714    -0.10%    0.6035   100%    53%    45%
+always_correct        1.0978    +8.80%    0.4940    +4.69%    0.6314   100%    26%    29%
+best_fixed            1.0981    +8.83%    0.4941    +4.69%    0.6314    90%    29%    32%
+random_correct        1.0525    +4.31%    0.4902    +3.86%    0.6323    30%    31%    40%
+  oracle (selection-inflated, not attainable): 0.7197 vs accept 1.0090
+  actions with transferable signal: ['abstain', 'damp_trend', 'ensemble', 'respecify_seasonality', 'transform']
+
+========================================================================================================
+PROBABILISTIC ACCURACY (CRPS, scaled)   n=3284 instances / 578 series
+========================================================================================================
+SERIES-LEVEL (confirmatory: bootstrap over series, ANALYSIS_PLAN S7)
+policy             series mean   delta %            95% CI (%)  win rate          p
+never_correct           0.8466    +0.00%   [  +0.00,   +0.00]    50.0%        nan
+rgc_calibrated          0.8123    -4.04%   [ -14.47,   +2.87]    61.0%    5.4e-07
+always_ensemble         0.7359   -13.07%*  [ -22.85,   -7.27]    65.4%    1.2e-21
+always_correct          0.8915    +5.31%   [  -0.38,  +12.96]    54.8%      0.041
+best_fixed              0.8925    +5.43%   [  -0.25,  +13.05]    53.5%      0.072
+random_correct          0.8825    +4.25%*  [  +2.24,   +6.58]    42.1%    6.9e-08
+  * = 95% series-level bootstrap CI excludes zero. A policy can improve the mean
+    while winning on under half of series; both are shown because they differ here.
+
+INSTANCE-LEVEL (descriptive only -- within-series dependence makes these intervals too narrow)
+policy                  mean    vs ref  geo-mean    vs ref    median   acts   help   harm
+never_correct         0.8621    +0.00%    0.4232    +0.00%    0.4582     0%     0%     0%
+rgc_calibrated        0.8275    -4.01%    0.4015    -5.11%    0.4460    97%    47%    38%
+always_ensemble       0.7506   -12.93%    0.4244    +0.31%    0.4415   100%    55%    45%
+always_correct        0.9103    +5.59%    0.4095    -3.22%    0.4515   100%    44%    40%
+best_fixed            0.9113    +5.71%    0.4095    -3.23%    0.4537    94%    44%    39%
+random_correct        0.8967    +4.01%    0.4421    +4.47%    0.4744    30%    37%    48%
+  oracle (selection-inflated, not attainable): 0.5834 vs accept 0.8621
+  actions with transferable signal: ['abstain', 'damp_trend', 'ensemble', 'recalibrate_intervals', 'refit_post_changepoint', 'respecify_seasonality', 'switch_model', 'transform']
+
+============================================================================================
+MECHANISM: INTERVAL COVERAGE (nominal -> empirical)
+============================================================================================
+action                       cov@80   cov@95  calib err
+accept                        0.650    0.787      0.313
+ensemble                      0.766    0.906      0.078
+recalibrate_intervals         0.693    0.856      0.201
+abstain                       0.796    0.898      0.056
+damp_trend                    0.572    0.718      0.460
+
+  Geometric means use an additive offset of 0.001; absolute values depend on it, relative comparisons do not.
+
+Saved to D:\paper\TS-AgentBench\results\headline_results.parquet

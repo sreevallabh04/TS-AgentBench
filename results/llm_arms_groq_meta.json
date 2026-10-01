@@ -1,0 +1,12 @@
+{
+  "run": "main_20260918-233847_3fa46848",
+  "provider": "groq",
+  "model": "qwen/qwen3.8-27b",
+  "n_subsample": 140,
+  "seed": 0,
+  "live_calls": 11,
+  "cache_hits": 549,
+  "errors": 0,
+  "prompt_tokens": 8279,
+  "completion_tokens": 976
+}

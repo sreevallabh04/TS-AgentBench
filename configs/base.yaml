@@ -1,0 +1,93 @@
+# Base configuration. Other configs inherit from this via `extends: base.yaml` and
+# override only what differs, so an ablation is a three-line diff rather than a copy.
+#
+# Every key here maps onto a dataclass field in core/config.py. Unknown keys are a
+# hard error: a silently-ignored typo could invalidate an experiment.
+
+name: base
+description: >
+  Shared defaults for TS-AgentBench experiments. Not meant to be run directly.
+
+seeds: [0, 1, 2, 3, 4]
+n_jobs: -1
+
+data:
+  include_synthetic: true
+  include_real: true
+  synthetic_families: ["all"]
+  series_per_family: 100
+  real_datasets: []
+  max_series_per_dataset: 150
+  max_series_length: 1024
+
+split:
+  # Sizes are in observations taken from the end of each series.
+  val_length: 48
+  test_length: 48
+  n_test_origins: 3
+  origin_stride: 8
+  n_val_origins: 5
+  min_train_length: 32
+
+forecast:
+  horizons: [1, 8, 24]
+  models:
+    - naive
+    - seasonal_naive
+    - drift
+    - theta
+    - ets
+    - arima
+    - linear_ar
+    - random_forest
+    - xgboost
+  # Expensive on CPU; run on a subsample and reported as such.
+  heavy_models: [lstm, tcn, transformer, chronos]
+  heavy_model_fraction: 0.25
+  coverage_levels: [0.8, 0.95]
+
+agent:
+  arms:
+    - never_correct
+    - baselineB_llm_single
+    - always_correct
+    - random_correct
+    - threshold_single
+    - best_fixed
+    - rgc
+    - rgc_calibrated
+    - oracle_correct
+  risk_threshold: null        # null -> set by conformal risk control on validation
+  target_correction_rate: 0.30
+  acceptance_delta: 0.02
+  abstention_quantile: 0.95
+  # Calibrated-gate settings, selected on a held-out validation origin (deviation D4).
+  calibrated_margin: 0.0
+  calibrated_risk_z: 0.0
+  # Ablation switches. All true in the full system; ablation configs flip one each.
+  use_self_critique: true
+  use_uncertainty: true
+  use_model_disagreement: true
+  use_changepoint: true
+  use_anomaly: true
+  use_adaptive_tools: true
+  use_backtesting: true
+  use_correction_loop: true
+
+llm:
+  provider: gemini
+  model: gemini-3.5-flash-lite
+  temperature: 0.0
+  max_output_tokens: 1024
+  max_calls: 5000
+  cache_only: false
+  subsample_instances: 0      # 0 -> no subsampling
+
+eval:
+  primary_metric: mase
+  bootstrap_resamples: 10000
+  bootstrap_unit: series      # resample series, not instances (within-series dependence)
+  alpha: 0.05
+  large_error_quantile: 0.80  # defines the `large_error` label used by H3
+  n_calibration_bins: 15
+  oracle_delta: 0.10           # labelling margin; see benchmark/oracle.py on selection bias

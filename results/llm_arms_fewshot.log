@@ -1,0 +1,111 @@
++ PY=/c/Users/skakarala/AppData/Local/Programs/Python/Python312/python.exe
++ RUN=main_20260918-233847_3fa46848
++ ARMS=never_correct,always_ensemble,rgc_calibrated,llm_single,llm_critique_gate
++ cd /d/paper/TS-AgentBench
++ /c/Users/skakarala/AppData/Local/Programs/Python/Python312/python.exe scripts/llm_arms.py --run main_20260918-233847_3fa46848 --n 60 --rpm 14 --workers 4 --max-calls 300 --provider gemini --model gemini-3.5-flash-lite --max-output-tokens 1024 --arms never_correct,always_ensemble,rgc_calibrated,llm_single,llm_critique_gate --out results/llm_arms_n60_zeroshot.parquet
+23:23:54 INFO    llm_arms               run main_20260918-233847_3fa46848: 97510 outcome rows, 9751 instances
+23:23:54 INFO    llm_arms               provider=gemini model=gemini-3.5-flash-lite keys=4 rpm=14.0
+23:24:39 INFO    llm_arms               [mase] scoring all arms on 60 of 3284 test instances (60 series)
+23:25:30 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3023: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3024: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+23:25:55 INFO    calibration            gain calibrator fitted on 12626 nested pairs; 5/9 actions show transferable signal: ['abstain', 'damp_trend', 'ensemble', 'respecify_seasonality', 'transform']
+23:25:55 INFO    llm_arms               restricted to arms: ['never_correct', 'always_ensemble', 'rgc_calibrated', 'llm_single', 'llm_critique_gate']
+23:25:55 INFO    llm_arms               [mase] never_correct        acts=   0%  calls=0  hits=0  0.0s
+23:25:55 INFO    llm_arms               [mase] always_ensemble      acts= 100%  calls=0  hits=0  0.0s
+23:25:55 INFO    llm_arms               [mase] rgc_calibrated       acts=   5%  calls=0  hits=0  0.0s
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
+23:27:05 WARNING llm                    LLM call failed (ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\nPlease retry in 52.284792961s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.5-flash-lite'}, 'quotaValue': '15'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '52s'}]}}); retrying in 2s
+23:27:05 WARNING llm                    LLM call failed (ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\nPlease retry in 52.284806911s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.5-flash-lite'}, 'quotaValue': '15'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '52s'}]}}); retrying in 2s
+23:27:07 WARNING llm                    LLM call failed (ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\nPlease retry in 51.051089252s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.5-flash-lite'}, 'quotaValue': '15'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '51s'}]}}); retrying in 2s
+23:27:08 WARNING llm                    LLM call failed (ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\nPlease retry in 49.92116174s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.5-flash-lite'}, 'quotaValue': '15'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '49s'}]}}); retrying in 2s
+23:27:09 WARNING llm                    LLM call failed (ClientError: 429 RESOURCE_EXHAUSTED. {'error': {'code': 429, 'message': 'You exceeded your current quota, please check your plan and billing details. For more information on this error, head to: https://ai.google.dev/gemini-api/docs/rate-limits. To monitor your current usage, head to: https://ai.dev/rate-limit. \n* Quota exceeded for metric: generativelanguage.googleapis.com/generate_content_free_tier_requests, limit: 15, model: gemini-3.5-flash-lite\nPlease retry in 48.78809267s.', 'status': 'RESOURCE_EXHAUSTED', 'details': [{'@type': 'type.googleapis.com/google.rpc.Help', 'links': [{'description': 'Learn more about Gemini API quotas', 'url': 'https://ai.google.dev/gemini-api/docs/rate-limits'}]}, {'@type': 'type.googleapis.com/google.rpc.QuotaFailure', 'violations': [{'quotaMetric': 'generativelanguage.googleapis.com/generate_content_free_tier_requests', 'quotaId': 'GenerateRequestsPerMinutePerProjectPerModel-FreeTier', 'quotaDimensions': {'location': 'global', 'model': 'gemini-3.5-flash-lite'}, 'quotaValue': '15'}]}, {'@type': 'type.googleapis.com/google.rpc.RetryInfo', 'retryDelay': '48s'}]}}); retrying in 2s
+23:29:10 INFO    llm_arms               [mase] llm_single           provider failures 0.0%, unparsed replies 0.0%
+23:29:10 INFO    llm_arms               [mase] llm_single           acts=  68%  calls=50  hits=10  194.9s
+23:33:09 INFO    llm_arms               [mase] llm_critique_gate    provider failures 0.0%, unparsed replies 0.0%
+23:33:09 INFO    llm_arms               [mase] llm_critique_gate    acts=  77%  calls=50  hits=10  238.2s
+23:33:42 INFO    llm_arms               [crps_scaled] scoring all arms on 60 of 3284 test instances (60 series)
+23:33:57 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.666)
+23:34:24 INFO    calibration            gain calibrator fitted on 12626 nested pairs; 8/9 actions show transferable signal: ['abstain', 'damp_trend', 'ensemble', 'recalibrate_intervals', 'refit_post_changepoint', 'respecify_seasonality', 'switch_model', 'transform']
+23:34:25 INFO    llm_arms               restricted to arms: ['never_correct', 'always_ensemble', 'rgc_calibrated', 'llm_single', 'llm_critique_gate']
+23:34:25 INFO    llm_arms               [crps_scaled] never_correct        acts=   0%  calls=0  hits=0  0.0s
+23:34:25 INFO    llm_arms               [crps_scaled] always_ensemble      acts= 100%  calls=0  hits=0  0.0s
+23:34:25 INFO    llm_arms               [crps_scaled] rgc_calibrated       acts=  97%  calls=0  hits=0  0.0s
+23:34:25 INFO    llm_arms               [crps_scaled] llm_single           provider failures 0.0%, unparsed replies 0.0%
+23:34:25 INFO    llm_arms               [crps_scaled] llm_single           acts=  68%  calls=0  hits=60  0.2s
+23:34:25 INFO    llm_arms               [crps_scaled] llm_critique_gate    provider failures 0.0%, unparsed replies 0.0%
+23:34:25 INFO    llm_arms               [crps_scaled] llm_critique_gate    acts=  77%  calls=0  hits=60  0.2s
+
+========================================================================================================
+MASE   n=60 instances / 60 series
+========================================================================================================
+policy               series mean   delta %           95% CI (%)  win rate   acts          p
+never_correct             1.0447    +0.00%   [  +0.00,   +0.00]    50.0%     0%        nan
+always_ensemble           1.0974    +5.04%   [  -9.06,  +24.71]    48.3%   100%       0.61
+rgc_calibrated            1.0454    +0.06%   [  -0.16,   +0.34]    50.0%     5%        nan
+llm_single                1.1330    +8.45%*  [  +3.00,  +14.72]    39.2%    68%     0.0048
+llm_critique_gate         1.1407    +9.19%*  [  +1.69,  +17.60]    38.3%    77%      0.018
+  * = series-level bootstrap CI excludes zero
+
+========================================================================================================
+CRPS_SCALED   n=60 instances / 60 series
+========================================================================================================
+policy               series mean   delta %           95% CI (%)  win rate   acts          p
+never_correct             0.9179    +0.00%   [  +0.00,   +0.00]    50.0%     0%        nan
+always_ensemble           0.8967    -2.31%   [ -16.91,  +13.54]    53.3%   100%       0.42
+rgc_calibrated            0.9341    +1.76%   [  -3.18,   +7.54]    51.7%    97%       0.75
+llm_single                0.9981    +8.73%*  [  +2.75,  +15.62]    38.3%    68%      0.019
+llm_critique_gate         1.0195   +11.06%*  [  +4.34,  +18.85]    34.2%    77%     0.0045
+  * = series-level bootstrap CI excludes zero
+
+========================================================================================================
+LLM COST
+========================================================================================================
+                   llm_calls  cache_hits  prompt_tokens  completion_tokens  wall_seconds
+policy                                                                                  
+always_ensemble            0           0              0                  0      0.017775
+llm_critique_gate         50          70          37540               3123    238.440354
+llm_single                50          70          36240               2795    195.043354
+never_correct              0           0              0                  0      0.020520
+rgc_calibrated             0           0              0                  0      0.064191
+
+total live calls this session: 100, cache hits: 140, errors: 0, tokens: 79698
+
+Saved to results\llm_arms_n60_zeroshot.parquet
++ /c/Users/skakarala/AppData/Local/Programs/Python/Python312/python.exe scripts/llm_arms.py --run main_20260918-233847_3fa46848 --n 60 --rpm 14 --workers 4 --max-calls 300 --few-shot 8 --provider gemini --model gemini-3.5-flash-lite --max-output-tokens 1024 --arms never_correct,always_ensemble,rgc_calibrated,llm_single,llm_critique_gate --out results/llm_arms_fewshot.parquet
+23:34:34 INFO    llm_arms               run main_20260918-233847_3fa46848: 97510 outcome rows, 9751 instances
+23:34:35 INFO    llm_arms               provider=gemini model=gemini-3.5-flash-lite keys=4 rpm=14.0
+23:35:18 INFO    llm_arms               [mase] scoring all arms on 60 of 3284 test instances (60 series)
+23:35:40 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+23:35:40 INFO    llm_arms               few-shot prefix: 8 examples from validation (5 correct-to-act, actions ['abstain', 'accept', 'ensemble', 'respecify_seasonality', 'robustify', 'switch_model'])
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3023: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[:, None]
+C:\Users\skakarala\AppData\Local\Programs\Python\Python312\Lib\site-packages\numpy\lib\_function_base_impl.py:3024: RuntimeWarning: invalid value encountered in divide
+  c /= stddev[None, :]
+23:36:06 INFO    calibration            gain calibrator fitted on 12626 nested pairs; 5/9 actions show transferable signal: ['abstain', 'damp_trend', 'ensemble', 'respecify_seasonality', 'transform']
+23:36:06 INFO    llm_arms               restricted to arms: ['never_correct', 'always_ensemble', 'rgc_calibrated', 'llm_single', 'llm_critique_gate']
+23:36:06 INFO    llm_arms               [mase] never_correct        acts=   0%  calls=0  hits=0  0.0s
+23:36:06 INFO    llm_arms               [mase] always_ensemble      acts= 100%  calls=0  hits=0  0.0s
+23:36:06 INFO    llm_arms               [mase] rgc_calibrated       acts=   5%  calls=0  hits=0  0.0s
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
+Direct use of automatic function calling (AFC) in Models.generate_content is not recommended. Instead, we recommend to use AFC in Chat.send_message. Similarly, direct use of AFC in Models.generate_content_stream is not recommended. Instead, we recommend to use AFC in Chat.send_message_stream.
+23:40:18 INFO    llm_arms               [mase] llm_single           provider failures 0.0%, unparsed replies 0.0%
+23:40:18 INFO    llm_arms               [mase] llm_single           acts=  67%  calls=60  hits=0  251.4s
+23:44:20 INFO    llm_arms               [mase] llm_critique_gate    provider failures 0.0%, unparsed replies 0.0%
+23:44:20 INFO    llm_arms               [mase] llm_critique_gate    acts=  67%  calls=60  hits=0  242.4s
+23:44:56 INFO    llm_arms               [crps_scaled] scoring all arms on 60 of 3284 test instances (60 series)
+23:45:10 INFO    reliability            reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.666)
+23:45:10 INFO    llm_arms               few-shot prefix: 8 examples from validation (5 correct-to-act, actions ['accept', 'ensemble', 'recalibrate_intervals', 'respecify_seasonality', 'robustify', 'switch_model'])
+23:45:39 INFO    calibration            gain calibrator fitted on 12626 nested pairs; 8/9 actions show transferable signal: ['abstain', 'damp_trend', 'ensemble', 'recalibrate_intervals', 'refit_post_changepoint', 'respecify_seasonality', 'switch_model', 'transform']
+23:45:39 INFO    llm_arms               restricted to arms: ['never_correct', 'always_ensemble', 'rgc_calibrated', 'llm_single', 'llm_critique_gate']
+23:45:40 INFO    llm_arms               [crps_scaled] never_correct        acts=   0%  calls=0  hits=0  0.0s
+23:45:40 INFO    llm_arms               [crps_scaled] always_ensemble      acts= 100%  calls=0  hits=0  0.0s
+23:45:40 INFO    llm_arms               [crps_scaled] rgc_calibrated       acts=  97%  calls=0  hits=0  0.0s
+/c/Users/SKAKAR~1/AppData/Local/Temp/claude/d--paper/73a26422-4cfe-4692-85f3-98e7377357aa/scratchpad/fewshot.sh: line 16: 16288 Killed                     "$PY" scripts/llm_arms.py --run "$RUN" --n 60 --rpm 14 --workers 4 --max-calls 300 --few-shot 8 --provider gemini --model gemini-3.5-flash-lite --max-output-tokens 1024 --arms "$ARMS" --out results/llm_arms_fewshot.parquet
++ echo FEWSHOT_PAIR_DONE
+FEWSHOT_PAIR_DONE

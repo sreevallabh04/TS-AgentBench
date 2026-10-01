@@ -1,0 +1,82 @@
+\section*{Pre-Registered Hypotheses and Outcomes}
+
+\begin{table}[htbp]
+\centering
+\caption{Every pre-registered hypothesis and its verdict, with what each verdict
+does and does not mean. The analysis plan was fixed before any experiment was run.
+Several ``supported'' verdicts are weak, and the last column says why rather than
+leaving it to the reader.}
+\label{tab:hypotheses}
+\small
+\fittable{\input{tables/table_hypotheses}}
+\end{table}
+
+\section*{Broader Impact Statement}
+
+The practical message of this work is cautionary, and we think that is where its impact
+lies. Automated self-correction is being added to forecasting systems on the assumption
+that a model inspecting its own output will improve it. We find, in a controlled setting
+with counterfactual ground truth, that unconditional correction reliably \emph{degrades}
+point accuracy, and that the adaptive machinery intended to prevent that does not
+establish an improvement over doing nothing. Forecasts drive decisions about inventory,
+staffing, capacity and public health resourcing; a correction stage that silently makes
+a subset of them worse, while presenting as a reliability feature, is a realistic way for
+harm to enter such a system unnoticed. We would rather this result be available to
+practitioners than not.
+
+The positive finding carries its own risk. We show that a calibrated failure-risk
+estimate is a useful triage signal for routing forecasts to human review. Triage systems
+can entrench the disparities in the data they are fitted to: series that are short,
+irregular, or from under-represented sources may be systematically over- or
+under-flagged, and a reviewer working from a ranked queue has little visibility into
+that. The risk estimator here is fitted on statistical diagnostics with no demographic
+content, but the series themselves are not a neutral sample, and we have not audited
+flagging rates across data sources. Anyone deploying such a signal should.
+
+We see no dual-use concern specific to this work. The datasets are public, contain no
+personal data, and are used under the licences recorded in the released manifest. The
+release is intended to make correction policies, including ones that disagree with our
+conclusions, cheap to evaluate against the same counterfactual outcomes.
+
+\section*{Reproducibility Statement}
+
+Every result is produced by a single command against a versioned configuration file, and
+each run writes a manifest recording the configuration, its hash, the code version, the
+environment and package versions. Reruns with the same configuration and seed reproduce
+identical metrics. LLM responses are cached under a hash of model, prompt and parameters,
+so the reported results can be regenerated without an API key and without network
+access. All figures and tables in this manuscript are generated from results files by
+\texttt{scripts/make\_paper\_assets.py}; no experimental number is entered by hand. The
+pre-registered analysis plan, including all deviations from it, is in
+\texttt{docs/ANALYSIS\_PLAN.md} in the released code.
+
+\section*{Data Availability}
+
+The benchmark generators, the counterfactual outcome tensor, the evaluation framework
+and all analysis code are provided as an anonymised archive with this submission, and
+will be released publicly under a permissive licence with an archived DOI on acceptance.
+The archive includes the cached language-model responses, so every LLM arm in this paper
+replays without an API key and without a provider account.
+
+Real datasets are not redistributed. They are obtained from their original sources by
+\texttt{scripts/prepare\_data.py}, which records the URL, licence, SHA-256 checksum and
+access date of every file in \texttt{datasets/LICENSES.md}. Monash archive datasets are
+CC~BY~4.0 \citep{monash2021}; the ETT data is used under the licence stated in its
+upstream repository \citep{informer2021}, and only derived metrics are reported.
+
+Synthetic data is not distributed as files because it is fully determined by its
+generator, seed and index, and is regenerated deterministically by the released code.
+
+\section*{Author Contributions}
+
+\ifcameraready
+Sreevallabh Kakarala is the sole author and carried out every role:
+conceptualisation, methodology, software, validation, formal analysis,
+investigation, data curation, visualisation, writing of the original draft, and
+review and editing.
+\else
+This paper has a single author, who carried out every role: conceptualisation,
+methodology, software, validation, formal analysis, investigation, data curation,
+visualisation, writing of the original draft, and review and editing. The name is
+withheld for anonymous review.
+\fi

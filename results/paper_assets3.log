@@ -1,0 +1,12 @@
+14:14:51 INFO    paper_assets           generating paper assets from D:\paper\TS-AgentBench\results\runs\main_20260918-233847_3fa46848
+Generated 19 assets from main_20260918-233847_3fa46848
+  figures -> D:\paper\TS-AgentBench\paper\figures
+  tables  -> D:\paper\TS-AgentBench\paper\tables
+  summary -> D:\paper\TS-AgentBench\paper\generated\results_summary.json
+
+Pre-registered hypotheses:
+  H1: not supported  (Wilcoxon (Holm-adj.) = 0.421)
+  H3: supported      (AUROC of the risk estimator = 0.793)
+  H4: supported      (mean action evaluations per instance = 0.088)
+  H6: supported      (RGC vs. random_correct = 0.023)
+  H7: supported      (mean oracle regret = 0.085)

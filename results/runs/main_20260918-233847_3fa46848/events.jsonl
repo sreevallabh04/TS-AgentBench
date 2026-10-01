@@ -1,0 +1,12 @@
+{"event": "tensor_built", "n_instances": 9751, "n_rows": 97510, "ts": 1789772892.4233358}
+{"event": "estimator_fitted", "gain_threshold": 0.7195570011659419, "large_error": 0.20009364757296708, "n_features": 64, "should_correct": 0.6098017793038863, "ts": 1789772922.100351}
+{"correction_rate": 0.0, "event": "policy_scored", "mean_metric": 1.0089966308454663, "policy": "never_correct", "seed": 0, "ts": 1789772923.4655137}
+{"correction_rate": 1.0, "event": "policy_scored", "mean_metric": 1.097764545584372, "policy": "always_correct", "seed": 0, "ts": 1789772924.2548635}
+{"correction_rate": 0.21010962241169306, "event": "policy_scored", "mean_metric": 1.0364685447828799, "policy": "random_correct", "seed": 0, "ts": 1789772924.6829286}
+{"correction_rate": 0.28958587088915955, "event": "policy_scored", "mean_metric": 1.0700899124462901, "policy": "threshold_single", "seed": 0, "ts": 1789772925.6777904}
+{"correction_rate": 0.902557856272838, "event": "policy_scored", "mean_metric": 1.0981237107449617, "policy": "best_fixed", "seed": 0, "ts": 1789772932.1214874}
+{"correction_rate": 0.20006090133982948, "event": "policy_scored", "mean_metric": 1.0132454815575185, "policy": "rgc", "seed": 0, "ts": 1789772932.8653524}
+{"correction_rate": 0.2028014616321559, "event": "policy_scored", "mean_metric": 1.0355598007401814, "policy": "random_correct", "seed": 1, "ts": 1789772933.3307748}
+{"correction_rate": 0.20219244823386115, "event": "policy_scored", "mean_metric": 1.0361002196732003, "policy": "random_correct", "seed": 2, "ts": 1789772933.7720442}
+{"correction_rate": 0.20736906211936662, "event": "policy_scored", "mean_metric": 1.0378130822515539, "policy": "random_correct", "seed": 3, "ts": 1789772934.1964538}
+{"correction_rate": 0.20858708891595615, "event": "policy_scored", "mean_metric": 1.0436641026515674, "policy": "random_correct", "seed": 4, "ts": 1789772934.5972807}

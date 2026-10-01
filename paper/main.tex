@@ -1,0 +1,101 @@
+% TS-AgentBench manuscript.
+%
+% Target: Transactions on Machine Learning Research (TMLR).
+%
+% Why TMLR rather than a conference or Frontiers. TMLR's two acceptance criteria are
+% (i) are the claims supported by accurate, convincing and clear evidence, and (ii)
+% would some individuals in TMLR's audience be interested in the findings. There is
+% explicitly no novelty or significance bar, and no page limit. That is the right venue
+% for a measurement paper whose central result is partly negative and whose value is in
+% the rigour of the measurement rather than in a new state of the art. The Frontiers
+% variant of this manuscript is preserved at main_frontiers.tex; it uses the same
+% section files, so both stay in sync.
+%
+% Style files (tmlr.sty, tmlr.bst, fancyhdr.sty) are from
+% https://github.com/JmlrOrg/tmlr-style-file and are vendored alongside this file.
+%   \usepackage{tmlr}             -> anonymous, for submission   (current)
+%   \usepackage[preprint]{tmlr}   -> named, for arXiv
+%   \usepackage[accepted]{tmlr}   -> camera-ready
+%
+% Build:
+%   python scripts/make_paper_assets.py --run latest   # regenerate all numbers
+%   latexmk -pdf main.tex
+%
+% INTEGRITY RULE: this manuscript contains no hardcoded experimental numbers.
+% Every table is \input from tables/, every figure from figures/, and every number
+% quoted inline is a macro defined in generated/macros.tex. All three are written by
+% scripts/make_paper_assets.py from results/. If the experiment is rerun, the paper
+% re-renders; the text cannot silently disagree with the data.
+
+\documentclass{article}
+
+\usepackage{tmlr}
+
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{amsmath,amssymb}
+\usepackage{booktabs}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{caption}
+\usepackage{subcaption}
+\usepackage{microtype}
+\usepackage{url}
+
+\graphicspath{{figures/}}
+
+% Auto-generated numbers. Regenerate with scripts/make_paper_assets.py.
+\IfFileExists{generated/macros.tex}{\input{generated/macros.tex}}{%
+  \typeout{WARNING: generated/macros.tex missing. Run scripts/make_paper_assets.py.}%
+  \newcommand{\runid}{PENDING}\newcommand{\ntestinstances}{??}%
+  \newcommand{\nseries}{??}\newcommand{\acceptmase}{??}%
+  \newcommand{\oraclemase}{??}\newcommand{\realizablemase}{??}%
+  \newcommand{\shouldcorrectrate}{??}%
+}
+
+% A visible marker for anything not yet backed by a completed run. Nothing carrying
+% this marker may remain in a submitted manuscript.
+% Generated tables change width whenever the results do --- another model family
+% adds rows and columns --- so the wide ones are scaled to the text block rather
+% than hand-tuned after every run. This only ever shrinks: a table that already
+% fits is left at its natural size.
+\newcommand{\fittable}[1]{%
+  \resizebox{\ifdim\width>\linewidth \linewidth\else \width\fi}{!}{#1}%
+}
+
+\newcommand{\todo}[1]{\textcolor{red}{\textbf{[TODO: #1]}}}
+
+\title{Correct Diagnosis Is Not Enough: A Counterfactual Benchmark for
+Self-Correction in Time-Series Forecasting Agents}
+
+% Camera-ready switch. TMLR review is double-blind, so any back-matter text that
+% would name the author is gated on this and stays off until acceptance.
+\newif\ifcameraready
+\camerareadyfalse
+
+% TMLR is double-blind at submission; tmlr.sty prints "Anonymous authors" and ignores
+% this block unless the [preprint] or [accepted] option is given.
+\author{%
+  Sreevallabh Kakarala\\
+  Independent Researcher\\
+  \texttt{srivallabhkakarala@gmail.com}
+}
+
+\def\month{09}
+\def\year{2026}
+\def\openreview{\url{https://openreview.net/forum?id=XXXXXXXXXX}}
+
+\begin{document}
+\maketitle
+
+\input{sections/00_abstract}
+\input{sections/01_introduction}
+\input{sections/02_methods}
+\input{sections/03_results}
+\input{sections/04_discussion}
+\input{sections/05_backmatter}
+
+\bibliographystyle{tmlr}
+\bibliography{references}
+
+\end{document}

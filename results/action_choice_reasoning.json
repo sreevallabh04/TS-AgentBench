@@ -1,0 +1,46 @@
+{
+  "metric": "mase",
+  "model": "openai/gpt-oss-20b",
+  "rows": [
+    {
+      "arm": "llm_single",
+      "n_instances": 51,
+      "n_series": 51,
+      "chosen": 1.1588440773339754,
+      "uniform_random": 1.3789541918579096,
+      "best_in_menu": 0.8292195977877974,
+      "worst_in_menu": 2.6264430619974077,
+      "chosen_vs_random_pct": -15.96210489250356,
+      "ci_lo": -37.65474971498652,
+      "ci_hi": 0.23197113919287968,
+      "beats_random_on_pct_of_series": 0.676470588235294,
+      "significant": false,
+      "oracle_gap_pct": 39.751168499340146,
+      "oracle_gap_ci_lo": 22.440671528073555,
+      "oracle_gap_ci_hi": 70.4327002152236,
+      "headroom_recovered_pct": 40.03934205673469,
+      "headroom_ci_lo": -0.8361191684816958,
+      "headroom_ci_hi": 67.08243330684836
+    },
+    {
+      "arm": "llm_critique_gate",
+      "n_instances": 42,
+      "n_series": 42,
+      "chosen": 1.0627458019599185,
+      "uniform_random": 1.2028041355270103,
+      "best_in_menu": 0.7649761668451053,
+      "worst_in_menu": 2.364175268758894,
+      "chosen_vs_random_pct": -11.644317593381505,
+      "ci_lo": -26.447523179261655,
+      "ci_hi": 1.7718774257654988,
+      "beats_random_on_pct_of_series": 0.6785714285714285,
+      "significant": false,
+      "oracle_gap_pct": 38.92534800696691,
+      "oracle_gap_ci_lo": 25.160530424899473,
+      "oracle_gap_ci_hi": 58.85878673713025,
+      "headroom_recovered_pct": 31.989352801910343,
+      "headroom_ci_lo": -5.754245893179529,
+      "headroom_ci_hi": 60.412133884356095
+    }
+  ]
+}

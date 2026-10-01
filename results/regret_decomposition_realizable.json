@@ -1,0 +1,158 @@
+{
+  "mase": {
+    "n_instances": 2370,
+    "n_series": 420,
+    "stats": {
+      "stage:accept": {
+        "point": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "excludes_zero": false
+      },
+      "stage:canonical_fix": {
+        "point": 2.431282637713972,
+        "ci_lo": -0.4973133322308509,
+        "ci_hi": 5.3342636178246154,
+        "excludes_zero": false
+      },
+      "stage:validated_matched": {
+        "point": 5.331123507525515,
+        "ci_lo": -3.1989972284060504,
+        "ci_hi": 19.187488255580636,
+        "excludes_zero": false
+      },
+      "stage:validated_any": {
+        "point": 4.451433162883833,
+        "ci_lo": 0.15962582089274982,
+        "ci_hi": 9.952241113707158,
+        "excludes_zero": true
+      },
+      "stage:test_matched": {
+        "point": -15.11935366820235,
+        "ci_lo": -17.59686440592511,
+        "ci_hi": -12.796165393155933,
+        "excludes_zero": true
+      },
+      "stage:test_any": {
+        "point": -31.242645049153627,
+        "ci_lo": -33.45726709748939,
+        "ci_hi": -29.104613008396893,
+        "excludes_zero": true
+      },
+      "realizable total achievable": {
+        "point": 4.451433162883833,
+        "ci_lo": 0.15962582089274982,
+        "ci_hi": 9.952241113707158,
+        "excludes_zero": true
+      },
+      "realizable first-choice loss": {
+        "point": -2.899840869811543,
+        "ci_lo": -16.619447061980836,
+        "ci_hi": 5.493051619410905,
+        "excludes_zero": false
+      },
+      "realizable restriction loss": {
+        "point": 0.8796903446416815,
+        "ci_lo": -5.131007998431027,
+        "ci_hi": 9.890156897994304,
+        "excludes_zero": false
+      },
+      "ceiling total achievable": {
+        "point": -31.242645049153627,
+        "ci_lo": -33.45726709748939,
+        "ci_hi": -29.104613008396893,
+        "excludes_zero": true
+      },
+      "ceiling first-choice loss": {
+        "point": 17.55063630591632,
+        "ci_lo": 14.78509933633908,
+        "ci_hi": 20.498336984422245,
+        "excludes_zero": true
+      },
+      "ceiling restriction loss": {
+        "point": 16.123291380951276,
+        "ci_lo": 14.492959886168569,
+        "ci_hi": 17.866234153633823,
+        "excludes_zero": true
+      }
+    }
+  },
+  "crps_scaled": {
+    "n_instances": 2370,
+    "n_series": 420,
+    "stats": {
+      "stage:accept": {
+        "point": 0.0,
+        "ci_lo": 0.0,
+        "ci_hi": 0.0,
+        "excludes_zero": false
+      },
+      "stage:canonical_fix": {
+        "point": 3.588813759987941,
+        "ci_lo": 0.029331544846738025,
+        "ci_hi": 7.2642060470791,
+        "excludes_zero": true
+      },
+      "stage:validated_matched": {
+        "point": 3.7582789549569284,
+        "ci_lo": -6.544044981514661,
+        "ci_hi": 20.333810130312624,
+        "excludes_zero": false
+      },
+      "stage:validated_any": {
+        "point": -0.8026286645919867,
+        "ci_lo": -4.235348236010194,
+        "ci_hi": 2.789563811834865,
+        "excludes_zero": false
+      },
+      "stage:test_matched": {
+        "point": -19.520657371122386,
+        "ci_lo": -22.053932781690303,
+        "ci_hi": -17.005997446407452,
+        "excludes_zero": true
+      },
+      "stage:test_any": {
+        "point": -33.41750783924285,
+        "ci_lo": -35.77064327164757,
+        "ci_hi": -31.114232143244095,
+        "excludes_zero": true
+      },
+      "realizable total achievable": {
+        "point": -0.8026286645919867,
+        "ci_lo": -4.235348236010194,
+        "ci_hi": 2.789563811834865,
+        "excludes_zero": false
+      },
+      "realizable first-choice loss": {
+        "point": -0.16946519496898738,
+        "ci_lo": -16.691616318208187,
+        "ci_hi": 10.451480327848072,
+        "excludes_zero": false
+      },
+      "realizable restriction loss": {
+        "point": 4.5609076195489155,
+        "ci_lo": -4.43741731440132,
+        "ci_hi": 19.248993693277836,
+        "excludes_zero": false
+      },
+      "ceiling total achievable": {
+        "point": -33.41750783924285,
+        "ci_lo": -35.77064327164757,
+        "ci_hi": -31.114232143244095,
+        "excludes_zero": true
+      },
+      "ceiling first-choice loss": {
+        "point": 23.109471131110325,
+        "ci_lo": 19.670056404368648,
+        "ci_hi": 26.82696123165321,
+        "excludes_zero": true
+      },
+      "ceiling restriction loss": {
+        "point": 13.896850468120466,
+        "ci_lo": 12.283748020569986,
+        "ci_hi": 15.69815304526788,
+        "excludes_zero": true
+      }
+    }
+  }
+}

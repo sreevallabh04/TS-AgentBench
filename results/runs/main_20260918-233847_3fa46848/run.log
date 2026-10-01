@@ -1,0 +1,16 @@
+2026-09-18 23:39:00,486 INFO TS-AgentBench.runner run main_20260918-233847_3fa46848 (config hash 3fa46848540c)
+2026-09-18 23:39:05,763 INFO TS-AgentBench.datasets.real loaded 30 series from monash_tourism_monthly
+2026-09-18 23:39:05,795 INFO TS-AgentBench.datasets.real loaded 30 series from monash_hospital
+2026-09-18 23:39:05,921 INFO TS-AgentBench.datasets.real loaded 30 series from monash_nn5_daily
+2026-09-18 23:39:05,955 INFO TS-AgentBench.datasets.real loaded 30 series from monash_covid_deaths
+2026-09-18 23:39:05,976 INFO TS-AgentBench.datasets.real loaded 1 series from monash_saugeen
+2026-09-18 23:39:06,013 INFO TS-AgentBench.datasets.real loaded 7 series from ett_h1
+2026-09-18 23:39:16,026 INFO TS-AgentBench.datasets.real loaded 30 series from monash_m4_monthly
+2026-09-18 23:39:16,113 INFO TS-AgentBench.runner dataset: 578 series, 9751 instances (0 series dropped as too short)
+2026-09-18 23:39:16,229 INFO TS-AgentBench.tensor building tensor: 9751 instances x 10 actions (9 models, 8 tools)
+2026-09-19 04:38:11,236 INFO TS-AgentBench.runner tensor built in 17935s
+2026-09-19 04:38:41,649 INFO TS-AgentBench.reliability reliability estimator fitted on 6407 validation instances, 64 features (base rates: large_error=0.200, should_correct=0.610)
+2026-09-19 04:38:42,177 WARNING TS-AgentBench.runner GEMINI_API_KEY is not set; skipping LLM arms ['baselineB_llm_single']. The non-LLM results remain valid, but do not report this run as covering LLM baselines.
+2026-09-19 04:38:42,248 INFO TS-AgentBench.runner LLM arms restricted to a stratified subsample of 800 instances
+2026-09-19 04:38:42,974 INFO TS-AgentBench.runner adaptive correction rate 20.0%; matching random arm
+2026-09-19 04:39:59,997 INFO TS-AgentBench.runner run complete: D:\paper\TS-AgentBench\results\runs\main_20260918-233847_3fa46848
